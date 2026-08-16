@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import { KOPI_KENANGAN_PRODUCTS } from './kopi_kenangan_products_data';
 
 let db: any;
 
@@ -27,7 +28,7 @@ const memoryStore: any = {
     { id: 'brand_voucher', name: 'Voucher & Promo', slug: 'voucher-promo', logo_url: '/voucher-logo.svg', status: 'OFF' },
   ],
   outlets: [],
-  products: [],
+  products: KOPI_KENANGAN_PRODUCTS,
   orders: [],
 };
 
