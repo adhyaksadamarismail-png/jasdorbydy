@@ -53,6 +53,7 @@ export interface Product {
   category: string;
   availability: 'ON' | 'OFF';
   customization_json?: string;
+  is_single_item?: boolean | number;
 }
 
 export interface SelectedCustomization {
@@ -76,6 +77,7 @@ export interface CartItem {
   selected_customization: SelectedCustomization;
   unit_price: number; // base_price + extras
   total_price: number; // unit_price * qty
+  is_single_item?: boolean;
 }
 
 export interface Order {

@@ -8,7 +8,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_2",
@@ -19,7 +20,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 12500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_3",
@@ -30,7 +32,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_4",
@@ -41,7 +44,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 13500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_5",
@@ -52,7 +56,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 17000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_6",
@@ -63,7 +68,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 17000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_7",
@@ -74,7 +80,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 17000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_8",
@@ -85,7 +92,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_9",
@@ -96,7 +104,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_10",
@@ -107,7 +116,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_11",
@@ -118,7 +128,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 14500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_12",
@@ -129,7 +140,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 13500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_13",
@@ -140,7 +152,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 14500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_14",
@@ -151,7 +164,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 14000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_15",
@@ -162,7 +176,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_16",
@@ -173,7 +188,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_17",
@@ -184,7 +200,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_18",
@@ -195,7 +212,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 13500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_19",
@@ -206,7 +224,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 17000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_20",
@@ -217,7 +236,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_45",
@@ -228,7 +248,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 14500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_46",
@@ -239,7 +260,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_21",
@@ -250,7 +272,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_22",
@@ -261,7 +284,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16500,
     "category": "Oatside",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_23",
@@ -272,7 +296,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 17000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_24",
@@ -283,7 +308,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_25",
@@ -294,7 +320,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_26",
@@ -305,7 +332,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_27",
@@ -316,7 +344,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_28",
@@ -327,7 +356,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_29",
@@ -338,7 +368,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 14000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_30",
@@ -349,7 +380,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_32",
@@ -360,7 +392,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 12500,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 1
   },
   {
     "id": "kk_prod_33",
@@ -371,7 +404,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_34",
@@ -382,7 +416,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 17000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_35",
@@ -393,7 +428,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_36",
@@ -404,7 +440,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_37",
@@ -415,7 +452,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 13500,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_47",
@@ -426,7 +464,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 7500,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 1
   },
   {
     "id": "kk_prod_48",
@@ -437,7 +476,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_49",
@@ -448,7 +488,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 12500,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_50",
@@ -459,7 +500,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 14500,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_51",
@@ -470,7 +512,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15500,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_52",
@@ -481,7 +524,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 17000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_53",
@@ -492,7 +536,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 17500,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_54",
@@ -503,7 +548,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":false,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":false,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_55",
@@ -514,7 +560,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 13500,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_56",
@@ -525,7 +572,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 17500,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":false,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":false,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_57",
@@ -536,7 +584,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16000,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":false,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":false,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_58",
@@ -547,7 +596,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16500,
     "category": "Non-Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":false,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":false,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_60",
@@ -558,7 +608,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15000,
     "category": "Oatside",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_61",
@@ -569,7 +620,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16500,
     "category": "Oatside",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_62",
@@ -580,7 +632,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_63",
@@ -591,7 +644,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 14500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_64",
@@ -602,7 +656,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16500,
     "category": "Kopi",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_65",
@@ -613,7 +668,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 20000,
     "category": "Frappe",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_66",
@@ -624,7 +680,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 19000,
     "category": "Frappe",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_38",
@@ -635,7 +692,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Frappe",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_39",
@@ -646,7 +704,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 20000,
     "category": "Frappe",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_40",
@@ -657,7 +716,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18500,
     "category": "Frappe",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_41",
@@ -668,7 +728,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 17500,
     "category": "Frappe",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_42",
@@ -679,7 +740,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16500,
     "category": "Frappe",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_43",
@@ -690,7 +752,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Frappe",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_44",
@@ -701,7 +764,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 18000,
     "category": "Frappe",
     "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}"
+    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_140",
@@ -712,7 +776,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_100",
@@ -723,7 +788,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 12500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_101",
@@ -734,7 +800,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 16000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_102",
@@ -745,7 +812,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_103",
@@ -756,7 +824,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_104",
@@ -767,7 +836,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 15000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_105",
@@ -778,7 +848,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 10500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_106",
@@ -789,7 +860,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_107",
@@ -800,7 +872,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_108",
@@ -811,7 +884,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 12500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_109",
@@ -822,7 +896,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_110",
@@ -833,7 +908,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 10500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_111",
@@ -844,7 +920,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_112",
@@ -855,7 +932,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 1
   },
   {
     "id": "kk_prod_113",
@@ -866,7 +944,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 13500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_114",
@@ -877,7 +956,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 14500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_115",
@@ -888,7 +968,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 14500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_116",
@@ -899,7 +980,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 9000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 1
   },
   {
     "id": "kk_prod_117",
@@ -910,7 +992,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 8500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 1
   },
   {
     "id": "kk_prod_118",
@@ -921,7 +1004,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_119",
@@ -932,7 +1016,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 10500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_120",
@@ -943,7 +1028,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 8500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_121",
@@ -954,7 +1040,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_122",
@@ -965,7 +1052,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 12500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_123",
@@ -976,7 +1064,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 13500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_124",
@@ -987,7 +1076,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 13500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_125",
@@ -998,7 +1088,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 9500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_126",
@@ -1009,7 +1100,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 13500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_127",
@@ -1020,7 +1112,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 10500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_128",
@@ -1031,7 +1124,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 13500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_129",
@@ -1042,7 +1136,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_130",
@@ -1053,7 +1148,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 12500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_131",
@@ -1064,7 +1160,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 14500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_132",
@@ -1075,7 +1172,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 10000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_133",
@@ -1086,7 +1184,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 10000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_134",
@@ -1097,7 +1196,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 10000,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_135",
@@ -1108,7 +1208,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 12500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_136",
@@ -1119,7 +1220,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_137",
@@ -1130,7 +1232,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 12500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_138",
@@ -1141,7 +1244,8 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_139",
@@ -1152,6 +1256,7 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "price": 11500,
     "category": "Food",
     "availability": "ON",
-    "customization_json": "{}"
+    "customization_json": "{}",
+    "is_single_item": 0
   }
 ];

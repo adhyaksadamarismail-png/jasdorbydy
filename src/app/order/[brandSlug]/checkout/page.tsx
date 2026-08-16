@@ -126,6 +126,14 @@ export default function CheckoutPage() {
       return;
     }
 
+    // Minimum Order Validation
+    const totalCartQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    const hasSingleItemProduct = cart.some((item) => item.is_single_item);
+    if (!hasSingleItemProduct && totalCartQty < 2) {
+      setErrorMessage('Minimal order 2 item. Pesanan minimal terdiri dari 2 item (bisa 2 cup atau 1 cup + 1 food).');
+      return;
+    }
+
     let pickupInfo = 'Sekarang';
     if (pickupType === 'Dijadwalkan') {
       if (!scheduledTime) {

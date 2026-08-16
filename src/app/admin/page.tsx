@@ -795,6 +795,34 @@ export default function AdminDashboardPage() {
                   </select>
                 </div>
 
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Tipe Menu (Rules Minimum Order)</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setEditingProduct({ ...editingProduct, is_single_item: false })}
+                      className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition ${
+                        !editingProduct.is_single_item
+                          ? 'bg-[#b84d6b] border-[#b84d6b] text-white shadow-xs'
+                          : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      <span>📦 Menu Reguler (Min. 2)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditingProduct({ ...editingProduct, is_single_item: true })}
+                      className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition ${
+                        editingProduct.is_single_item
+                          ? 'bg-[#b84d6b] border-[#b84d6b] text-white shadow-xs'
+                          : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      <span>⚡ Menu Satuan (Bisa 1)</span>
+                    </button>
+                  </div>
+                </div>
+
                 <div className="flex items-center gap-2 pt-2">
                   <button
                     type="submit"

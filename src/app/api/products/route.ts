@@ -36,20 +36,21 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { id, brand_id, name, image, description, price, category, availability } = body;
+    const { id, brand_id, name, image, description, price, category, availability, is_single_item } = body;
+    const isSingleVal = is_single_item ? 1 : 0;
 
     if (id) {
       db.prepare(`
         UPDATE products
-        SET brand_id = ?, name = ?, image = ?, description = ?, price = ?, category = ?, availability = ?
+        SET brand_id = ?, name = ?, image = ?, description = ?, price = ?, category = ?, availability = ?, is_single_item = ?
         WHERE id = ?
-      `).run(brand_id, name, image, description || '', price, category || 'Coffees', availability || 'ON', id);
+      `).run(brand_id, name, image, description || '', price, category || 'Coffees', availability || 'ON', isSingleVal, id);
     } else {
       const newId = `prod_${Date.now()}`;
       db.prepare(`
-        INSERT INTO products (id, brand_id, name, image, description, price, category, availability)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `).run(newId, brand_id, name, image || '/coffee-latte.svg', description || '', price, category || 'Coffees', availability || 'ON');
+        INSERT INTO products (id, brand_id, name, image, description, price, category, availability, is_single_item)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(newId, brand_id, name, image || '/coffee-latte.svg', description || '', price, category || 'Coffees', availability || 'ON', isSingleVal);
     }
 
     const products = db.prepare('SELECT * FROM products').all() as Product[];

@@ -188,12 +188,16 @@ export function initDb() {
         category TEXT DEFAULT "Coffees",
         availability TEXT DEFAULT "ON",
         customization_json TEXT DEFAULT "{}",
+        is_single_item INTEGER DEFAULT 0,
         FOREIGN KEY (brand_id) REFERENCES brands(id)
       );
     `);
 
     try {
       db.exec('ALTER TABLE products ADD COLUMN customization_json TEXT DEFAULT "{}"');
+    } catch (e) {}
+    try {
+      db.exec('ALTER TABLE products ADD COLUMN is_single_item INTEGER DEFAULT 0');
     } catch (e) {}
 
     // Orders Log Table

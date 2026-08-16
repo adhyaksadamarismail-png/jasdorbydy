@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, ShoppingBag, Plus, Minus, Search, Trash2, Edit3, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Plus, Search, Trash2, Edit3, ArrowRight, AlertCircle, Sparkles, X, Info } from 'lucide-react';
 import { Product, Brand, WebsiteSettings, CartItem } from '@/types';
 import ClosedPage from '@/components/ClosedPage';
 import ProductDetailModal from '@/components/ProductDetailModal';
@@ -30,6 +29,9 @@ export default function MenuPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [editingCartItem, setEditingCartItem] = useState<CartItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Minimum Order Toast Modal State
+  const [showMinOrderModal, setShowMinOrderModal] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -92,11 +94,9 @@ export default function MenuPage() {
     const index = cart.findIndex((c) => c.cart_item_id === item.cart_item_id);
 
     if (index >= 0) {
-      // Replace existing item
       updatedCart = [...cart];
       updatedCart[index] = item;
     } else {
-      // Add new item
       updatedCart = [...cart, item];
     }
     saveCartToStorage(updatedCart);
@@ -139,20 +139,98 @@ export default function MenuPage() {
   // Unique categories list
   const categories = ['Semua', ...Array.from(new Set(products.map((p) => p.category)))];
 
-  // Filtered Products
-  const filteredProducts = products.filter((p) => {
-    const matchesCategory = activeCategory === 'Semua' || p.category === activeCategory;
+  // Minimum Order Validation Logic
+  const totalCartQty = cart.reduce((sum, item) => sum + item.qty, 0);
+  const hasSingleItemInCart = cart.some((item) => item.is_single_item);
+  const isValidMinOrder = hasSingleItemInCart || totalCartQty >= 2;
+
+  const handleCheckoutClick = () => {
+    if (!isValidMinOrder) {
+      setShowMinOrderModal(true);
+      return;
+    }
+    router.push(`/order/${brandSlug}/checkout`);
+  };
+
+  // Filter products by search query
+  const searchFilteredProducts = products.filter((p) => {
     const matchesSearch =
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
+    return matchesSearch;
   });
 
-  const totalCartQty = cart.reduce((sum, item) => sum + item.qty, 0);
+  // Categorized items
+  const regularProducts = searchFilteredProducts.filter((p) => !p.is_single_item && (activeCategory === 'Semua' || p.category === activeCategory));
+  const singleItemProducts = searchFilteredProducts.filter((p) => p.is_single_item && (activeCategory === 'Semua' || p.category === activeCategory));
+
   const totalCartPrice = cart.reduce((sum, item) => sum + item.total_price, 0);
 
+  // Helper render card
+  const renderProductCard = (product: Product) => {
+    const isAvailable = product.availability === 'ON';
+    const isSingle = !!product.is_single_item;
+
+    return (
+      <div
+        key={product.id}
+        onClick={() => isAvailable && handleOpenProductModal(product)}
+        className={`soft-card-cute p-2.5 flex flex-col justify-between transition cursor-pointer relative overflow-hidden bg-white ${
+          !isAvailable ? 'opacity-50 grayscale cursor-not-allowed' : 'hover:border-pink-300 active:scale-[0.98]'
+        }`}
+      >
+        {/* Badge Single Item */}
+        {isSingle && (
+          <span className="absolute top-2 right-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-2xs">
+            ⚡ Satuan
+          </span>
+        )}
+
+        {/* Product Photo */}
+        <div className="w-full h-28 rounded-2xl bg-pink-50/70 p-2 flex items-center justify-center border border-pink-100/50 relative overflow-hidden mb-2">
+          <img
+            src={product.image}
+            alt={product.name}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = '/coffee-latte.svg';
+            }}
+            className="w-full h-full object-contain drop-shadow-xs"
+          />
+        </div>
+
+        {/* Product Name (Max 2 lines) */}
+        <div className="flex-1 flex flex-col justify-between">
+          <h3 className="font-bold text-xs text-gray-800 line-clamp-2 leading-snug min-h-[32px]">
+            {product.name}
+          </h3>
+
+          {/* Price & Compact Add Button */}
+          <div className="flex items-center justify-between mt-2 pt-1 border-t border-pink-50">
+            <span className="font-black text-xs text-[#e84393]">
+              Rp{product.price.toLocaleString('id-ID')}
+            </span>
+
+            {isAvailable ? (
+              <button
+                type="button"
+                className="px-2.5 py-1 rounded-full bg-pink-50 hover:bg-[#e84393] text-[#e84393] hover:text-white font-extrabold text-[11px] transition shadow-2xs flex items-center gap-0.5"
+              >
+                <span>+</span>
+                <span>Tambah</span>
+              </button>
+            ) : (
+              <span className="text-[9px] font-bold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
+                Habis
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-screen flex flex-col px-4 pt-4 pb-32">
+    <div className="min-h-screen flex flex-col px-4 pt-4 pb-36 max-w-lg mx-auto">
       {/* Top Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
@@ -197,67 +275,65 @@ export default function MenuPage() {
         ))}
       </div>
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 flex-1">
-        {filteredProducts.map((product) => {
-          const isAvailable = product.availability === 'ON';
+      {/* SECTION 1: MENU REGULER / FAVORIT (2 COLUMNS GRID MOBILE) */}
+      {regularProducts.length > 0 && (
+        <div className="mb-6 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-[#e84393]" />
+              {activeCategory === 'Semua' ? 'Menu Favorit' : `Menu ${activeCategory}`}
+            </h2>
+            <span className="text-[10px] text-pink-600 font-bold bg-pink-50 px-2 py-0.5 rounded-full">
+              Min. 2 Item
+            </span>
+          </div>
 
-          return (
-            <div
-              key={product.id}
-              onClick={() => isAvailable && handleOpenProductModal(product)}
-              className={`soft-card-cute p-3.5 flex gap-3.5 items-center transition cursor-pointer relative overflow-hidden ${
-                !isAvailable ? 'opacity-50 grayscale cursor-not-allowed' : 'hover:border-pink-300'
-              }`}
-            >
-              {/* Product Photo */}
-              <div className="w-20 h-20 rounded-2xl bg-pink-50/70 shrink-0 flex items-center justify-center p-2 border border-pink-100/50 overflow-hidden">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = '/coffee-latte.svg';
-                  }}
-                  className="w-full h-full object-contain drop-shadow-xs"
-                />
-              </div>
+          <div className="grid grid-cols-2 gap-3" style={{ gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' }}>
+            {regularProducts.map((p) => renderProductCard(p))}
+          </div>
+        </div>
+      )}
 
-              {/* Product Details */}
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-sm text-gray-800 line-clamp-1">{product.name}</h3>
-                <p className="text-[11px] text-gray-500 line-clamp-2 mt-0.5 font-medium leading-relaxed">
-                  {product.description}
-                </p>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="font-black text-sm text-[#e84393]">
-                    Rp{product.price.toLocaleString('id-ID')}
-                  </span>
-                  {isAvailable ? (
-                    <button
-                      type="button"
-                      className="px-3 py-1.5 rounded-full bg-pink-50 hover:bg-[#e84393] text-[#e84393] hover:text-white font-bold text-xs transition shadow-2xs"
-                    >
-                      + Tambah
-                    </button>
-                  ) : (
-                    <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                      Habis
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      {/* SECTION 2: MENU SATUAN (2 COLUMNS GRID MOBILE) */}
+      {singleItemProducts.length > 0 && (
+        <div className="mb-6 space-y-2.5">
+          <div className="flex items-center justify-between pt-2 border-t border-pink-100">
+            <h2 className="text-xs font-black text-purple-700 uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-purple-500" />
+              Menu Satuan
+            </h2>
+            <span className="text-[10px] text-purple-600 font-bold bg-purple-50 px-2 py-0.5 rounded-full">
+              Bisa 1 Item
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3" style={{ gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' }}>
+            {singleItemProducts.map((p) => renderProductCard(p))}
+          </div>
+        </div>
+      )}
+
+      {/* EMPTY STATE */}
+      {regularProducts.length === 0 && singleItemProducts.length === 0 && (
+        <div className="text-center py-10 soft-card-cute p-6">
+          <p className="text-xs font-bold text-gray-500">Tidak ada produk yang cocok dengan pencarian Anda.</p>
+        </div>
+      )}
 
       {/* CART SUMMARY SECTION IF ITEMS IN CART */}
       {cart.length > 0 && (
         <div className="mt-6 mb-4 space-y-2 border-t border-pink-200/60 pt-4">
-          <h3 className="text-xs font-black text-gray-700 uppercase tracking-wider flex items-center gap-1.5">
-            <ShoppingBag className="w-4 h-4 text-[#e84393]" />
-            Item di Keranjang ({totalCartQty})
-          </h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-black text-gray-700 uppercase tracking-wider flex items-center gap-1.5">
+              <ShoppingBag className="w-4 h-4 text-[#e84393]" />
+              Item di Keranjang ({totalCartQty})
+            </h3>
+            {!isValidMinOrder && (
+              <span className="text-[10px] font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full animate-pulse">
+                ⚠️ Min. 2 Item
+              </span>
+            )}
+          </div>
 
           <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
             {cart.map((item) => {
@@ -282,6 +358,11 @@ export default function MenuPage() {
                     <div className="flex items-center gap-1.5">
                       <span className="font-black text-gray-900">{item.name}</span>
                       <span className="text-rose-500 font-bold">× {item.qty}</span>
+                      {item.is_single_item && (
+                        <span className="text-[9px] bg-purple-100 text-purple-700 px-1.5 py-0.2 rounded-full font-bold">
+                          Satuan
+                        </span>
+                      )}
                     </div>
                     {detailsList.length > 0 && (
                       <p className="text-[11px] text-gray-500 mt-1 leading-snug font-medium">
@@ -317,22 +398,55 @@ export default function MenuPage() {
       {/* STICKY BOTTOM CART BAR */}
       {cart.length > 0 && (
         <div className="fixed bottom-3 left-0 right-0 max-w-[480px] mx-auto px-4 z-40 animate-in slide-in-from-bottom duration-250">
-          <div className="bg-[#1A1614] text-white rounded-full p-2.5 pl-5 shadow-2xl flex items-center justify-between border-2 border-pink-500/30">
+          <div className="bg-[#1A1614] text-white rounded-2xl p-3 pl-4 shadow-2xl flex items-center justify-between border-2 border-pink-500/30">
             <div>
               <span className="text-[10px] text-pink-300 font-bold uppercase tracking-wider block">
                 {totalCartQty} Item Ditambahkan
               </span>
-              <span className="font-black text-base text-white">
-                Rp{totalCartPrice.toLocaleString('id-ID')}
-              </span>
+              <div className="flex items-baseline gap-2">
+                <span className="font-black text-base text-white">
+                  Rp{totalCartPrice.toLocaleString('id-ID')}
+                </span>
+                {!isValidMinOrder && (
+                  <span className="text-[10px] text-rose-400 font-bold">
+                    (Min. 2 item)
+                  </span>
+                )}
+              </div>
             </div>
 
             <button
-              onClick={() => router.push(`/order/${brandSlug}/checkout`)}
-              className="py-2.5 px-5 rounded-full bg-[#e84393] hover:bg-[#d63031] text-white font-black text-xs shadow-md flex items-center gap-1.5 transition active:scale-95"
+              onClick={handleCheckoutClick}
+              className={`py-2.5 px-4 rounded-xl font-black text-xs shadow-md flex items-center gap-1.5 transition ${
+                isValidMinOrder
+                  ? 'bg-[#e84393] hover:bg-[#d63031] text-white active:scale-95'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              }`}
             >
               <span>Lanjut Checkout</span>
               <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* MINIMUM ORDER WARNING TOAST MODAL POPUP */}
+      {showMinOrderModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-xs rounded-3xl p-6 text-center shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col items-center">
+            <div className="w-14 h-14 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mb-3">
+              <Info className="w-7 h-7" />
+            </div>
+            <h3 className="text-base font-black text-gray-800 mb-1">Minimal Order 2 Item</h3>
+            <p className="text-xs text-gray-600 leading-relaxed mb-5">
+              Pesanan minimal terdiri dari 2 item.<br />
+              Bisa berupa: <span className="font-bold text-pink-600">2 cup</span> atau <span className="font-bold text-pink-600">1 cup + 1 food</span>.
+            </p>
+            <button
+              onClick={() => setShowMinOrderModal(false)}
+              className="cute-pill-btn w-full py-2.5 text-xs shadow-md"
+            >
+              + Tambah Menu Lain
             </button>
           </div>
         </div>
