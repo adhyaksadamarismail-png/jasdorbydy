@@ -117,11 +117,11 @@ export default function CheckoutPage() {
     );
   }
 
-  // Minimum Order Validation Calculations
+  // Minimum Order & Order Type Validation Calculations
   const totalCartQty = cart.reduce((sum, item) => sum + item.qty, 0);
   const totalCartPrice = cart.reduce((sum, item) => sum + item.total_price, 0);
-  const hasSingleItemProduct = cart.some((item) => item.is_single_item);
-  const isValidMinOrder = hasSingleItemProduct || totalCartQty >= 2;
+  const cartHasSingleItem = cart.some((item) => item.is_single_item);
+  const isValidMinOrder = cartHasSingleItem ? totalCartQty === 1 : totalCartQty >= 2;
 
   // EMPTY CART STATE ON CHECKOUT
   if (cart.length === 0) {
@@ -156,7 +156,11 @@ export default function CheckoutPage() {
     }
 
     if (!isValidMinOrder) {
-      setErrorMessage('Minimal order 2 item. Pesanan minimal terdiri dari 2 item (bisa 2 cup atau 1 cup + 1 food).');
+      if (cartHasSingleItem) {
+        setErrorMessage('Menu Satuan hanya dapat dipesan maksimal 1 cup per order.');
+      } else {
+        setErrorMessage('Minimal order 2 item. Pesanan minimal terdiri dari 2 item (bisa 2 cup atau 1 cup + 1 food).');
+      }
       return;
     }
 

@@ -18,6 +18,9 @@ export default function MenuPage() {
   const [settings, setSettings] = useState<WebsiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Tab State: 'reguler' | 'satuan'
+  const [activeTabType, setActiveTabType] = useState<'reguler' | 'satuan'>('reguler');
+
   // Filter & Search states
   const [activeCategory, setActiveCategory] = useState<string>('Semua');
   const [searchQuery, setSearchQuery] = useState('');
@@ -30,8 +33,21 @@ export default function MenuPage() {
   const [editingCartItem, setEditingCartItem] = useState<CartItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Minimum Order Toast Modal State
+  // Minimum Order Warning Toast Modal State
   const [showMinOrderModal, setShowMinOrderModal] = useState(false);
+
+  // Cart Isolation & Rules Warning Modal State
+  const [cartAlertModal, setCartAlertModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    desc: string;
+    btnText: string;
+  }>({
+    isOpen: false,
+    title: '',
+    desc: '',
+    btnText: 'Tutup',
+  });
 
   useEffect(() => {
     async function loadData() {
@@ -75,6 +91,43 @@ export default function MenuPage() {
   };
 
   const handleOpenProductModal = (product: Product) => {
+    const isSingleProduct = !!product.is_single_item;
+    const cartHasSingle = cart.some((c) => c.is_single_item);
+    const cartHasRegular = cart.some((c) => !c.is_single_item);
+
+    // Rule 1: Trying to add Regular item when Cart has Single item
+    if (!isSingleProduct && cartHasSingle) {
+      setCartAlertModal({
+        isOpen: true,
+        title: 'Selesaikan order Menu Satuan terlebih dahulu',
+        desc: 'Selesaikan order Menu Satuan terlebih dahulu sebelum membuat order Menu Reguler.',
+        btnText: 'Lihat Keranjang',
+      });
+      return;
+    }
+
+    // Rule 2: Trying to add Single item when Cart has Regular item
+    if (isSingleProduct && cartHasRegular) {
+      setCartAlertModal({
+        isOpen: true,
+        title: 'Selesaikan order Menu Reguler terlebih dahulu',
+        desc: 'Selesaikan order Menu Reguler terlebih dahulu sebelum membuat order Menu Satuan.',
+        btnText: 'Lihat Keranjang',
+      });
+      return;
+    }
+
+    // Rule 3: Trying to add 2nd Single item when Cart already has a Single item
+    if (isSingleProduct && cartHasSingle && (!editingCartItem || editingCartItem.product_id !== product.id)) {
+      setCartAlertModal({
+        isOpen: true,
+        title: 'Maksimal 1 Cup',
+        desc: 'Menu Satuan hanya dapat dipesan 1 cup dalam satu order. Silakan selesaikan order Menu Satuan sebelumnya terlebih dahulu.',
+        btnText: 'Kembali ke Keranjang',
+      });
+      return;
+    }
+
     setSelectedProduct(product);
     setEditingCartItem(null);
     setIsModalOpen(true);
@@ -90,6 +143,50 @@ export default function MenuPage() {
   };
 
   const handleAddToCart = (item: CartItem) => {
+    const isSingleItem = !!item.is_single_item;
+    const cartHasSingle = cart.some((c) => c.is_single_item && c.cart_item_id !== item.cart_item_id);
+    const cartHasRegular = cart.some((c) => !c.is_single_item && c.cart_item_id !== item.cart_item_id);
+
+    if (isSingleItem && item.qty > 1) {
+      setCartAlertModal({
+        isOpen: true,
+        title: 'Maksimal 1 Cup',
+        desc: 'Menu Satuan hanya dapat dipesan 1 cup dalam satu order. Silakan selesaikan order Menu Satuan sebelumnya terlebih dahulu.',
+        btnText: 'Kembali ke Keranjang',
+      });
+      return;
+    }
+
+    if (!isSingleItem && cartHasSingle) {
+      setCartAlertModal({
+        isOpen: true,
+        title: 'Selesaikan order Menu Satuan terlebih dahulu',
+        desc: 'Selesaikan order Menu Satuan terlebih dahulu sebelum membuat order Menu Reguler.',
+        btnText: 'Lihat Keranjang',
+      });
+      return;
+    }
+
+    if (isSingleItem && cartHasRegular) {
+      setCartAlertModal({
+        isOpen: true,
+        title: 'Selesaikan order Menu Reguler terlebih dahulu',
+        desc: 'Selesaikan order Menu Reguler terlebih dahulu sebelum membuat order Menu Satuan.',
+        btnText: 'Lihat Keranjang',
+      });
+      return;
+    }
+
+    if (isSingleItem && cartHasSingle) {
+      setCartAlertModal({
+        isOpen: true,
+        title: 'Maksimal 1 Cup',
+        desc: 'Menu Satuan hanya dapat dipesan 1 cup dalam satu order. Silakan selesaikan order Menu Satuan sebelumnya terlebih dahulu.',
+        btnText: 'Kembali ke Keranjang',
+      });
+      return;
+    }
+
     let updatedCart: CartItem[] = [];
     const index = cart.findIndex((c) => c.cart_item_id === item.cart_item_id);
 
@@ -136,13 +233,11 @@ export default function MenuPage() {
     );
   }
 
-  // Unique categories list
-  const categories = ['Semua', ...Array.from(new Set(products.map((p) => p.category)))];
-
   // Minimum Order Validation Logic
   const totalCartQty = cart.reduce((sum, item) => sum + item.qty, 0);
-  const hasSingleItemInCart = cart.some((item) => item.is_single_item);
-  const isValidMinOrder = hasSingleItemInCart || totalCartQty >= 2;
+  const cartHasSingleItem = cart.some((item) => item.is_single_item);
+  const cartHasRegularItem = cart.some((item) => !item.is_single_item);
+  const isValidMinOrder = cartHasSingleItem ? totalCartQty === 1 : totalCartQty >= 2;
 
   const handleCheckoutClick = () => {
     if (!isValidMinOrder) {
@@ -160,13 +255,24 @@ export default function MenuPage() {
     return matchesSearch;
   });
 
-  // Categorized items
-  const regularProducts = searchFilteredProducts.filter((p) => !p.is_single_item && (activeCategory === 'Semua' || p.category === activeCategory));
-  const singleItemProducts = searchFilteredProducts.filter((p) => p.is_single_item && (activeCategory === 'Semua' || p.category === activeCategory));
+  // Categorized items by tab selection
+  const isTabSatuan = activeCategory === 'Menu Satuan' || activeTabType === 'satuan';
+
+  const regularProducts = searchFilteredProducts.filter(
+    (p) => !p.is_single_item && (activeCategory === 'Semua' || p.category === activeCategory)
+  );
+  const singleItemProducts = searchFilteredProducts.filter(
+    (p) => p.is_single_item && (activeCategory === 'Semua' || p.category === activeCategory)
+  );
+
+  const displayedProducts = isTabSatuan ? singleItemProducts : regularProducts;
+
+  // Unique categories list for regular items
+  const categories = ['Semua', ...Array.from(new Set(products.filter((p) => !p.is_single_item).map((p) => p.category)))];
 
   const totalCartPrice = cart.reduce((sum, item) => sum + item.total_price, 0);
 
-  // Helper render card
+  // Helper render product card
   const renderProductCard = (product: Product) => {
     const isAvailable = product.availability === 'ON';
     const isSingle = !!product.is_single_item;
@@ -175,7 +281,7 @@ export default function MenuPage() {
       <div
         key={product.id}
         onClick={() => isAvailable && handleOpenProductModal(product)}
-        className={`soft-card-cute p-2.5 flex flex-col justify-between transition cursor-pointer relative overflow-hidden bg-white ${
+        className={`soft-card-cute p-2.5 flex flex-col justify-between transition cursor-pointer relative overflow-hidden bg-white border border-pink-100 rounded-2xl shadow-2xs ${
           !isAvailable ? 'opacity-50 grayscale cursor-not-allowed' : 'hover:border-pink-300 active:scale-[0.98]'
         }`}
       >
@@ -186,8 +292,8 @@ export default function MenuPage() {
           </span>
         )}
 
-        {/* Product Photo */}
-        <div className="w-full h-28 rounded-2xl bg-pink-50/70 p-2 flex items-center justify-center border border-pink-100/50 relative overflow-hidden mb-2">
+        {/* Product Photo Container */}
+        <div className="w-full h-26 rounded-xl bg-pink-50/70 p-2 flex items-center justify-center border border-pink-100/50 relative overflow-hidden mb-2">
           <img
             src={product.image}
             alt={product.name}
@@ -258,79 +364,103 @@ export default function MenuPage() {
         </div>
       </div>
 
-      {/* Category Pills Slider */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar mb-4">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap ${
-              activeCategory === cat
-                ? 'bg-[#e84393] text-white shadow-xs'
-                : 'bg-white text-gray-700 border border-pink-100 hover:bg-pink-50'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
+      {/* TAB SELECTOR: MENU REGULER VS MENU SATUAN */}
+      <div className="grid grid-cols-2 gap-2 mb-3 bg-pink-50/60 p-1.5 rounded-2xl border border-pink-100">
+        <button
+          type="button"
+          onClick={() => {
+            setActiveTabType('reguler');
+            setActiveCategory('Semua');
+          }}
+          className={`py-2 px-3 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 ${
+            activeTabType === 'reguler'
+              ? 'bg-[#e84393] text-white shadow-xs'
+              : 'text-gray-600 hover:bg-white/60'
+          }`}
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Menu Reguler</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setActiveTabType('satuan');
+            setActiveCategory('Semua');
+          }}
+          className={`py-2 px-3 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 ${
+            activeTabType === 'satuan'
+              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xs'
+              : 'text-gray-600 hover:bg-white/60'
+          }`}
+        >
+          <span>⚡ Menu Satuan</span>
+        </button>
       </div>
 
-      {/* SECTION 1: MENU REGULER / FAVORIT (2 COLUMNS GRID MOBILE) */}
-      {regularProducts.length > 0 && (
-        <div className="mb-6 space-y-2.5">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-[#e84393]" />
-              {activeCategory === 'Semua' ? 'Menu Favorit' : `Menu ${activeCategory}`}
-            </h2>
-            <span className="text-[10px] text-pink-600 font-bold bg-pink-50 px-2 py-0.5 rounded-full">
-              Min. 2 Item
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3" style={{ gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' }}>
-            {regularProducts.map((p) => renderProductCard(p))}
-          </div>
+      {/* RULES BANNER FOR ACTIVE TAB */}
+      {activeTabType === 'reguler' ? (
+        <div className="mb-3 px-3 py-1.5 rounded-xl bg-pink-50 border border-pink-100 text-[#e84393] text-[11px] font-bold flex items-center gap-1.5">
+          <Info className="w-3.5 h-3.5 shrink-0" />
+          <span>Menu Reguler: Minimal order 2 item per order.</span>
+        </div>
+      ) : (
+        <div className="mb-3 px-3 py-1.5 rounded-xl bg-purple-50 border border-purple-100 text-purple-700 text-[11px] font-bold flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 shrink-0 text-purple-500" />
+          <span>Menu Satuan: Boleh order 1 cup saja (Maksimal 1 cup per order).</span>
         </div>
       )}
 
-      {/* SECTION 2: MENU SATUAN (2 COLUMNS GRID MOBILE) */}
-      {singleItemProducts.length > 0 && (
-        <div className="mb-6 space-y-2.5">
-          <div className="flex items-center justify-between pt-2 border-t border-pink-100">
-            <h2 className="text-xs font-black text-purple-700 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-purple-500" />
-              Menu Satuan
-            </h2>
-            <span className="text-[10px] text-purple-600 font-bold bg-purple-50 px-2 py-0.5 rounded-full">
-              Bisa 1 Item
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3" style={{ gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' }}>
-            {singleItemProducts.map((p) => renderProductCard(p))}
-          </div>
+      {/* Category Pills Slider (Only shown for Reguler Menu) */}
+      {activeTabType === 'reguler' && (
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar mb-3">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap ${
+                activeCategory === cat
+                  ? 'bg-[#e84393] text-white shadow-xs'
+                  : 'bg-white text-gray-700 border border-pink-100 hover:bg-pink-50'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
       )}
+
+      {/* PRODUCT GRID (2 COLUMNS MOBILE) */}
+      <div className="grid grid-cols-2 gap-3.5 mb-6" style={{ gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' }}>
+        {displayedProducts.map((p) => renderProductCard(p))}
+      </div>
 
       {/* EMPTY STATE */}
-      {regularProducts.length === 0 && singleItemProducts.length === 0 && (
-        <div className="text-center py-10 soft-card-cute p-6">
-          <p className="text-xs font-bold text-gray-500">Tidak ada produk yang cocok dengan pencarian Anda.</p>
+      {displayedProducts.length === 0 && (
+        <div className="text-center py-10 soft-card-cute p-6 bg-white border border-pink-100 rounded-3xl mb-6">
+          <p className="text-xs font-bold text-gray-500">Tidak ada produk yang cocok di section ini.</p>
         </div>
       )}
 
       {/* CART SUMMARY SECTION IF ITEMS IN CART */}
       {cart.length > 0 && (
-        <div className="mt-6 mb-4 space-y-2 border-t border-pink-200/60 pt-4">
+        <div className="mt-4 mb-4 space-y-2 border-t border-pink-200/60 pt-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-black text-gray-700 uppercase tracking-wider flex items-center gap-1.5">
               <ShoppingBag className="w-4 h-4 text-[#e84393]" />
               Item di Keranjang ({totalCartQty})
             </h3>
-            {!isValidMinOrder && (
+            {cartHasSingleItem ? (
+              <span className="text-[10px] font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full">
+                ⚡ Order Satuan (Maks. 1)
+              </span>
+            ) : !isValidMinOrder ? (
               <span className="text-[10px] font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full animate-pulse">
                 ⚠️ Min. 2 Item
+              </span>
+            ) : (
+              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                ✓ Memenuhi Syarat
               </span>
             )}
           </div>
@@ -397,7 +527,7 @@ export default function MenuPage() {
 
       {/* STICKY BOTTOM CART BAR */}
       {cart.length > 0 && (
-        <div className="fixed bottom-3 left-0 right-0 max-w-[480px] mx-auto px-4 z-40 animate-in slide-in-from-bottom duration-250">
+        <div className="fixed bottom-3 left-0 right-0 max-w-[440px] mx-auto px-5 z-40 animate-in slide-in-from-bottom duration-250">
           <div className="bg-[#1A1614] text-white rounded-2xl p-3 pl-4 shadow-2xl flex items-center justify-between border-2 border-pink-500/30">
             <div>
               <span className="text-[10px] text-pink-300 font-bold uppercase tracking-wider block">
@@ -439,7 +569,7 @@ export default function MenuPage() {
             </div>
             <h3 className="text-base font-black text-gray-800 mb-1">Minimal Order 2 Item</h3>
             <p className="text-xs text-gray-600 leading-relaxed mb-5">
-              Pesanan minimal terdiri dari 2 item.<br />
+              Pesanan Menu Reguler minimal terdiri dari 2 item.<br />
               Bisa berupa: <span className="font-bold text-pink-600">2 cup</span> atau <span className="font-bold text-pink-600">1 cup + 1 food</span>.
             </p>
             <button
@@ -447,6 +577,25 @@ export default function MenuPage() {
               className="cute-pill-btn w-full py-2.5 text-xs shadow-md"
             >
               + Tambah Menu Lain
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* CART ISOLATION / RULES ALERT MODAL */}
+      {cartAlertModal.isOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-xs rounded-3xl p-6 text-center shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col items-center">
+            <div className="w-14 h-14 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mb-3">
+              <AlertCircle className="w-7 h-7" />
+            </div>
+            <h3 className="text-base font-black text-gray-800 mb-2 leading-snug">{cartAlertModal.title}</h3>
+            <p className="text-xs text-gray-600 leading-relaxed mb-5">{cartAlertModal.desc}</p>
+            <button
+              onClick={() => setCartAlertModal({ ...cartAlertModal, isOpen: false })}
+              className="cute-pill-btn w-full py-2.5 text-xs shadow-md"
+            >
+              {cartAlertModal.btnText}
             </button>
           </div>
         </div>
