@@ -13,7 +13,7 @@ const memoryStore: any = {
       logo_url: '/logo-store.png',
       theme_color: '#b84d6b',
       wa_group_url: 'https://chat.whatsapp.com/GrupJasDorExample',
-      wa_admin_number: '6281234567890',
+      wa_admin_number: '6285124356993',
       testimonial_url: '#testimonials',
       website_status: 'ON',
       order_status: 'ON',
@@ -120,7 +120,7 @@ export function initDb() {
         logo_url TEXT DEFAULT "/logo-store.png",
         theme_color TEXT DEFAULT "#b84d6b",
         wa_group_url TEXT DEFAULT "https://chat.whatsapp.com/GrupJasDorExample",
-        wa_admin_number TEXT DEFAULT "6281234567890",
+        wa_admin_number TEXT DEFAULT "6285124356993",
         testimonial_url TEXT DEFAULT "#testimonials",
         website_status TEXT DEFAULT "ON",
         order_status TEXT DEFAULT "ON",
@@ -135,10 +135,10 @@ export function initDb() {
     if (settingsCount.count === 0) {
       db.prepare(`
         INSERT INTO website_settings (id, site_name, logo_url, theme_color, wa_group_url, wa_admin_number, testimonial_url, website_status, order_status, closed_title, closed_desc, closed_button_text)
-        VALUES (1, 'Jasdorbydy', '/logo-store.png', '#b84d6b', 'https://chat.whatsapp.com/GrupJasDorExample', '6281234567890', '#testimonials', 'ON', 'ON', 'LAGI ISTIRAHAT DULU', 'Pesanan sedang ditutup sementara. Silakan kembali lagi nanti.', 'Chat Admin')
+        VALUES (1, 'Jasdorbydy', '/logo-store.png', '#b84d6b', 'https://chat.whatsapp.com/GrupJasDorExample', '6285124356993', '#testimonials', 'ON', 'ON', 'LAGI ISTIRAHAT DULU', 'Pesanan sedang ditutup sementara. Silakan kembali lagi nanti.', 'Chat Admin')
       `).run();
     } else {
-      db.prepare("UPDATE website_settings SET logo_url = '/logo-store.png', site_name = 'Jasdorbydy' WHERE id = 1").run();
+      db.prepare("UPDATE website_settings SET wa_admin_number = '6285124356993', logo_url = '/logo-store.png', site_name = 'Jasdorbydy' WHERE id = 1").run();
     }
 
     // Brands Table

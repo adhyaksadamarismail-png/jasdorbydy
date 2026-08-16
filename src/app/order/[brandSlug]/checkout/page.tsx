@@ -192,7 +192,7 @@ Mohon konfirmasinya terimakasih`;
     }
 
     // Open WhatsApp
-    const adminNumber = settings ? settings.wa_admin_number.replace(/[^0-9]/g, '') : '6289524021272';
+    const adminNumber = settings && settings.wa_admin_number ? settings.wa_admin_number.replace(/[^0-9]/g, '') : '6285124356993';
     const waUrl = `https://wa.me/${adminNumber}?text=${encodeURIComponent(waText)}`;
 
     // Clear cart
