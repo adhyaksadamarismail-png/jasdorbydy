@@ -60,7 +60,7 @@ export default function MenuPage() {
         }
       } catch (err) {
         console.error('Failed loading menu data:', err);
-      } flex: {
+      } finally {
         setLoading(false);
       }
     }

@@ -13,11 +13,16 @@ export async function GET(req: Request) {
     let products: Product[] = [];
     if (brandSlug) {
       const brand = db.prepare('SELECT id FROM brands WHERE slug = ?').get(brandSlug) as { id: string } | undefined;
-      if (brand) {
-        products = db.prepare('SELECT * FROM products WHERE brand_id = ?').all(brand.id) as Product[];
+      const targetBrandId = brand ? brand.id : 'brand_kopi_kenangan';
+      products = db.prepare('SELECT * FROM products WHERE brand_id = ?').all(targetBrandId) as Product[];
+      if (products.length === 0) {
+        products = db.prepare('SELECT * FROM products').all() as Product[];
       }
     } else if (brandId) {
       products = db.prepare('SELECT * FROM products WHERE brand_id = ?').all(brandId) as Product[];
+      if (products.length === 0) {
+        products = db.prepare('SELECT * FROM products').all() as Product[];
+      }
     } else {
       products = db.prepare('SELECT * FROM products').all() as Product[];
     }

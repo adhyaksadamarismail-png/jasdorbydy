@@ -75,14 +75,24 @@ try {
       return {
         get: (...params: any[]) => {
           if (lowerSql.includes('website_settings')) return memoryStore.website_settings[0];
-          if (lowerSql.includes('count(*)')) return { count: 1 };
+          if (lowerSql.includes('brands')) {
+            const paramKey = params[0];
+            return memoryStore.brands.find((b: any) => b.slug === paramKey || b.id === paramKey) || memoryStore.brands[0];
+          }
+          if (lowerSql.includes('count(*)')) return { count: memoryStore.products.length };
           return null;
         },
         all: (...params: any[]) => {
           if (lowerSql.includes('from website_settings')) return memoryStore.website_settings;
           if (lowerSql.includes('from brands')) return memoryStore.brands;
           if (lowerSql.includes('from outlets')) return memoryStore.outlets;
-          if (lowerSql.includes('from products')) return memoryStore.products;
+          if (lowerSql.includes('from products')) {
+            if (params.length > 0 && params[0]) {
+              const filtered = memoryStore.products.filter((p: any) => p.brand_id === params[0]);
+              return filtered.length > 0 ? filtered : memoryStore.products;
+            }
+            return memoryStore.products;
+          }
           if (lowerSql.includes('from orders')) return memoryStore.orders;
           return [];
         },
