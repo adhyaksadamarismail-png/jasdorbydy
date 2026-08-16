@@ -82,7 +82,7 @@ export default function Homepage() {
         {/* SIDE-BY-SIDE PILL NAVIGATION BUTTONS */}
         <div className="grid grid-cols-2 gap-3 w-full my-5">
           <a
-            href={settings?.wa_group_url || 'https://chat.whatsapp.com'}
+            href={settings?.wa_group_url || 'https://chat.whatsapp.com/LOuCM1OUNNBEbuq894AJ0Q?s=cl&p=a&ilr=4'}
             target="_blank"
             rel="noopener noreferrer"
             className="cute-pill-btn"

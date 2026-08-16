@@ -122,7 +122,7 @@ export default function HeaderNav({ settings, onOpenTesti }: HeaderNavProps) {
               )}
 
               <a
-                href={settings?.wa_group_url || 'https://chat.whatsapp.com'}
+                href={settings?.wa_group_url || 'https://chat.whatsapp.com/LOuCM1OUNNBEbuq894AJ0Q?s=cl&p=a&ilr=4'}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsMenuOpen(false)}
