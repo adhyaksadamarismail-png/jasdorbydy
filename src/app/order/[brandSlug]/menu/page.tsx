@@ -230,7 +230,7 @@ export default function MenuPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col px-4 pt-4 pb-36 max-w-lg mx-auto">
+    <div className="min-h-screen flex flex-col px-6 pt-4 pb-36 max-w-md mx-auto">
       {/* Top Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">

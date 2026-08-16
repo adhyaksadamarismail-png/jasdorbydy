@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, ShoppingBag, Send, Calendar, Clock, MapPin, User, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Send, Clock, User, AlertCircle, Trash2, Plus, Minus } from 'lucide-react';
 import { CartItem, Brand, WebsiteSettings } from '@/types';
 import ClosedPage from '@/components/ClosedPage';
 
@@ -22,8 +21,7 @@ export default function CheckoutPage() {
   const [customerName, setCustomerName] = useState('');
   const [outletName, setOutletName] = useState('');
   const [pickupType, setPickupType] = useState<'Sekarang' | 'Dijadwalkan'>('Sekarang');
-  const [scheduledDate, setScheduledDate] = useState('');
-  const [scheduledTime, setScheduledTime] = useState('');
+  const [scheduledTime, setScheduledTime] = useState('12:00');
 
   // Error validation states
   const [errorMessage, setErrorMessage] = useState('');
@@ -52,11 +50,6 @@ export default function CheckoutPage() {
             setCart(JSON.parse(savedCart));
           } catch (e) {}
         }
-
-        // Set default date to today
-        const today = new Date().toISOString().split('T')[0];
-        setScheduledDate(today);
-        setScheduledTime('12:00');
       } catch (err) {
         console.error('Failed loading checkout:', err);
       } finally {
@@ -65,6 +58,35 @@ export default function CheckoutPage() {
     }
     loadCheckoutData();
   }, [brandSlug]);
+
+  const saveCartToStorage = (updatedCart: CartItem[]) => {
+    setCart(updatedCart);
+    sessionStorage.setItem(`jasdor_cart_${brandSlug}`, JSON.stringify(updatedCart));
+  };
+
+  const handleUpdateQty = (cart_item_id: string, delta: number) => {
+    const updatedCart = cart
+      .map((item) => {
+        if (item.cart_item_id === cart_item_id) {
+          const newQty = item.qty + delta;
+          if (newQty <= 0) return null;
+          return {
+            ...item,
+            qty: newQty,
+            total_price: item.unit_price * newQty,
+          };
+        }
+        return item;
+      })
+      .filter((item): item is CartItem => item !== null);
+
+    saveCartToStorage(updatedCart);
+  };
+
+  const handleRemoveItem = (cart_item_id: string) => {
+    const updatedCart = cart.filter((item) => item.cart_item_id !== cart_item_id);
+    saveCartToStorage(updatedCart);
+  };
 
   if (loading) {
     return (
@@ -95,14 +117,23 @@ export default function CheckoutPage() {
     );
   }
 
+  // Minimum Order Validation Calculations
+  const totalCartQty = cart.reduce((sum, item) => sum + item.qty, 0);
+  const totalCartPrice = cart.reduce((sum, item) => sum + item.total_price, 0);
+  const hasSingleItemProduct = cart.some((item) => item.is_single_item);
+  const isValidMinOrder = hasSingleItemProduct || totalCartQty >= 2;
+
+  // EMPTY CART STATE ON CHECKOUT
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-        <div className="soft-card-cute p-6 w-full max-w-xs flex flex-col items-center">
-          <ShoppingBag className="w-12 h-12 text-gray-300 mb-3" />
-          <h2 className="text-lg font-bold text-gray-800 mb-1">Keranjang Kosong</h2>
-          <p className="text-xs text-gray-500 mb-5">Silakan pilih menu terlebih dahulu sebelum checkout.</p>
-          <Link href={`/order/${brandSlug}/menu`} className="cute-pill-btn w-full">
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center max-w-md mx-auto">
+        <div className="soft-card-cute p-8 w-full flex flex-col items-center shadow-lg bg-white border border-pink-100 rounded-3xl">
+          <div className="w-16 h-16 rounded-full bg-pink-50 text-[#e84393] flex items-center justify-center mb-4">
+            <ShoppingBag className="w-8 h-8" />
+          </div>
+          <h2 className="text-lg font-black text-gray-800 mb-1">Keranjang masih kosong</h2>
+          <p className="text-xs font-semibold text-gray-500 mb-6">Yuk pilih menu favoritmu ☕</p>
+          <Link href={`/order/${brandSlug}/menu`} className="cute-pill-btn w-full py-3 text-xs shadow-md">
             Pilih Menu
           </Link>
         </div>
@@ -110,14 +141,12 @@ export default function CheckoutPage() {
     );
   }
 
-  const totalCartPrice = cart.reduce((sum, item) => sum + item.total_price, 0);
-
   const handleConfirmOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
 
     if (!customerName.trim()) {
-      setErrorMessage('Mohon isi Nama Anda.');
+      setErrorMessage('Mohon isi Nama Pemesan.');
       return;
     }
 
@@ -126,10 +155,7 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Minimum Order Validation
-    const totalCartQty = cart.reduce((sum, item) => sum + item.qty, 0);
-    const hasSingleItemProduct = cart.some((item) => item.is_single_item);
-    if (!hasSingleItemProduct && totalCartQty < 2) {
+    if (!isValidMinOrder) {
       setErrorMessage('Minimal order 2 item. Pesanan minimal terdiri dari 2 item (bisa 2 cup atau 1 cup + 1 food).');
       return;
     }
@@ -227,25 +253,36 @@ Mohon konfirmasinya terimakasih`;
   };
 
   return (
-    <div className="min-h-screen flex flex-col px-4 pt-4 pb-28">
+    <div className="min-h-screen flex flex-col px-5 pt-4 pb-28 max-w-md mx-auto">
       {/* Top Header Nav */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <Link
+            href={`/order/${brandSlug}/menu`}
+            className="p-2 rounded-full bg-white shadow-xs border border-pink-100 text-gray-700 hover:text-[#e84393]"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div>
+            <h1 className="text-lg font-extrabold text-gray-800">Checkout Pesanan</h1>
+            <p className="text-xs text-pink-600 font-semibold">{brand ? brand.name : 'Kopi Kenangan'}</p>
+          </div>
+        </div>
+
+        {/* Button Kembali Pilih Menu */}
         <Link
           href={`/order/${brandSlug}/menu`}
-          className="p-2 rounded-full bg-white shadow-xs border border-pink-100 text-gray-700 hover:text-[#e84393]"
+          className="px-3 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100 text-[#e84393] font-bold text-xs border border-pink-200/60 flex items-center gap-1 transition"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <Plus className="w-3.5 h-3.5" />
+          <span>Tambah Menu</span>
         </Link>
-        <div>
-          <h1 className="text-xl font-bold text-gray-800">Checkout Pesanan</h1>
-          <p className="text-xs text-pink-600 font-semibold">{brand ? brand.name : 'Kopi Kenangan'}</p>
-        </div>
       </div>
 
       <form onSubmit={handleConfirmOrder} className="space-y-4 flex-1">
         {/* CUSTOMER INFORMATION CARD */}
-        <div className="soft-card-cute p-4 space-y-3.5">
-          <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2 border-b border-pink-100 pb-2">
+        <div className="soft-card-cute p-4 space-y-3.5 bg-white border border-pink-100 rounded-3xl shadow-sm">
+          <h2 className="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2 border-b border-pink-100 pb-2">
             <User className="w-4 h-4 text-[#e84393]" />
             Informasi Pemesan & Outlet
           </h2>
@@ -278,7 +315,7 @@ Mohon konfirmasinya terimakasih`;
               onChange={(e) => setOutletName(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl border border-pink-200 text-xs font-semibold text-gray-800 outline-none focus:border-[#e84393] bg-pink-50/20"
             />
-            <p className="text-[11px] text-gray-400 font-medium">
+            <p className="text-[11px] text-gray-400 font-medium leading-tight">
               Contoh: Kopi Kenangan Summarecon Mall Bekasi / Grand Indonesia / Apotik Roxy Depok
             </p>
           </div>
@@ -292,7 +329,7 @@ Mohon konfirmasinya terimakasih`;
               <button
                 type="button"
                 onClick={() => setPickupType('Sekarang')}
-                className={`p-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition ${
+                className={`p-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition ${
                   pickupType === 'Sekarang'
                     ? 'bg-[#e84393] border-[#e84393] text-white shadow-xs'
                     : 'bg-white border-pink-100 text-gray-700 hover:bg-pink-50'
@@ -305,13 +342,13 @@ Mohon konfirmasinya terimakasih`;
               <button
                 type="button"
                 onClick={() => setPickupType('Dijadwalkan')}
-                className={`p-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition ${
+                className={`p-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition ${
                   pickupType === 'Dijadwalkan'
                     ? 'bg-[#e84393] border-[#e84393] text-white shadow-xs'
                     : 'bg-white border-pink-100 text-gray-700 hover:bg-pink-50'
                 }`}
               >
-                <Calendar className="w-4 h-4" />
+                <Clock className="w-4 h-4" />
                 <span>Dijadwalkan</span>
               </button>
             </div>
@@ -334,16 +371,26 @@ Mohon konfirmasinya terimakasih`;
           </div>
         </div>
 
-        {/* ORDER SUMMARY CARD */}
-        <div className="soft-card-cute p-4 space-y-3">
-          <h2 className="text-sm font-bold text-gray-800 border-b border-pink-100 pb-2">
-            Ringkasan Pesanan ({cart.reduce((s, i) => s + i.qty, 0)} Item)
-          </h2>
+        {/* ORDER SUMMARY CARD WITH ITEM DELETION AND QTY CONTROLS */}
+        <div className="soft-card-cute p-4 space-y-3 bg-white border border-pink-100 rounded-3xl shadow-sm">
+          <div className="flex items-center justify-between border-b border-pink-100 pb-2">
+            <h2 className="text-xs font-black text-gray-800 uppercase tracking-wider">
+              Ringkasan Pesanan ({totalCartQty} Item)
+            </h2>
+            <Link
+              href={`/order/${brandSlug}/menu`}
+              className="text-[11px] font-bold text-[#e84393] hover:underline flex items-center gap-0.5"
+            >
+              <span>+ Tambah Menu</span>
+            </Link>
+          </div>
 
-          <div className="space-y-2.5 divide-y divide-pink-100/60">
+          {/* ITEM LIST WITH DELETION AND QTY MODIFIERS */}
+          <div className="space-y-3 divide-y divide-pink-100/60">
             {cart.map((item) => {
               const cust = item.selected_customization;
               const detailsList: string[] = [];
+
               if (cust.suhu) detailsList.push(cust.suhu);
               if (cust.ukuran) detailsList.push(`Ukuran: ${cust.ukuran.name}`);
               if (cust.es) detailsList.push(`Es: ${cust.es}`);
@@ -354,19 +401,59 @@ Mohon konfirmasinya terimakasih`;
               if (cust.notes) detailsList.push(`Catatan: ${cust.notes}`);
 
               return (
-                <div key={item.cart_item_id} className="pt-2 flex justify-between items-start text-xs gap-3">
-                  <div className="flex-1 min-w-0">
-                    <span className="font-extrabold text-gray-900">{item.name}</span>
-                    <span className="text-rose-500 font-bold ml-1.5">× {item.qty}</span>
-                    {detailsList.length > 0 && (
-                      <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed font-medium">
-                        {detailsList.join(' · ')}
-                      </p>
-                    )}
+                <div key={item.cart_item_id} className="pt-3 flex flex-col gap-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-extrabold text-xs text-gray-900">{item.name}</span>
+                        {item.is_single_item && (
+                          <span className="text-[9px] bg-purple-100 text-purple-700 px-1.5 py-0.2 rounded-full font-bold">
+                            Satuan
+                          </span>
+                        )}
+                      </div>
+                      {detailsList.length > 0 && (
+                        <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed font-medium">
+                          {detailsList.join(' · ')}
+                        </p>
+                      )}
+                      <span className="font-black text-xs text-[#e84393] block mt-1">
+                        Rp{item.total_price.toLocaleString('id-ID')}
+                      </span>
+                    </div>
+
+                    {/* Trash Delete Item Button */}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveItem(item.cart_item_id)}
+                      className="p-1.5 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition shrink-0"
+                      title="Hapus menu"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
-                  <span className="font-extrabold text-gray-900 shrink-0">
-                    Rp{item.total_price.toLocaleString('id-ID')}
-                  </span>
+
+                  {/* Quantity Modifier Buttons */}
+                  <div className="flex items-center justify-between bg-pink-50/40 p-1.5 px-3 rounded-xl border border-pink-100/60">
+                    <span className="text-[11px] font-bold text-gray-600">Jumlah:</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleUpdateQty(item.cart_item_id, -1)}
+                        className="w-6 h-6 rounded-full bg-white border border-pink-200 text-gray-700 flex items-center justify-center font-bold text-xs hover:bg-pink-100 active:scale-95"
+                      >
+                        <Minus className="w-3 h-3" />
+                      </button>
+                      <span className="font-black text-xs text-gray-900 w-4 text-center">{item.qty}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleUpdateQty(item.cart_item_id, 1)}
+                        className="w-6 h-6 rounded-full bg-white border border-pink-200 text-gray-700 flex items-center justify-center font-bold text-xs hover:bg-pink-100 active:scale-95"
+                      >
+                        <Plus className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -380,22 +467,48 @@ Mohon konfirmasinya terimakasih`;
           </div>
         </div>
 
-        {/* Error Alert Box */}
+        {/* MINIMUM ORDER WARNING BANNER IF INVALID */}
+        {!isValidMinOrder && (
+          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 space-y-2 text-center animate-in fade-in">
+            <div className="flex items-center justify-center gap-2 font-black text-xs">
+              <AlertCircle className="w-4 h-4 text-rose-600" />
+              <span>Minimal Order 2 Item</span>
+            </div>
+            <p className="text-[11px] font-medium leading-relaxed">
+              Pesanan minimal terdiri dari 2 item (bisa 2 cup atau 1 cup + 1 food). Silakan tambah menu favoritmu lagi!
+            </p>
+            <Link
+              href={`/order/${brandSlug}/menu`}
+              className="inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-xl bg-rose-600 text-white font-bold text-xs shadow-xs hover:bg-rose-700 transition w-full"
+            >
+              <Plus className="w-4 h-4" />
+              <span>+ Tambah Menu Lagi</span>
+            </Link>
+          </div>
+        )}
+
+        {/* ERROR MESSAGE BANNER */}
         {errorMessage && (
-          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{errorMessage}</span>
+          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold text-center">
+            {errorMessage}
           </div>
         )}
 
         {/* SUBMIT BUTTON */}
-        <button
-          type="submit"
-          className="w-full py-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-md flex items-center justify-center gap-2 transition active:scale-98"
-        >
-          <Send className="w-4 h-4" />
-          <span>Konfirmasi via WhatsApp</span>
-        </button>
+        <div className="pt-2">
+          <button
+            type="submit"
+            disabled={!isValidMinOrder}
+            className={`w-full py-3.5 px-4 rounded-2xl text-xs font-black shadow-md flex items-center justify-center gap-2 transition ${
+              isValidMinOrder
+                ? 'bg-[#e84393] hover:bg-[#d63031] text-white active:scale-[0.99]'
+                : 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-75'
+            }`}
+          >
+            <Send className="w-4 h-4" />
+            <span>Konfirmasi via WhatsApp</span>
+          </button>
+        </div>
       </form>
     </div>
   );
