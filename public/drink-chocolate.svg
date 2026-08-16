@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <rect width="120" height="120" rx="16" fill="#fff5f5" />
+  <path d="M 42 42 L 46 88 Q 60 95 74 88 L 78 42 Z" fill="#4d2a18" />
+  <ellipse cx="60" cy="42" rx="18" ry="6" fill="#794628" />
+  <!-- Whipped cream -->
+  <path d="M 50 42 C 50 35, 55 30, 60 30 C 65 30, 70 35, 70 42 Z" fill="#ffffff" />
+  <line x1="68" y1="20" x2="58" y2="42" stroke="#d63031" stroke-width="4" stroke-linecap="round" />
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <rect width="120" height="120" rx="16" fill="#fffbe6" />
+  <!-- Toast Slice -->
+  <path d="M 35 45 Q 60 35 85 45 L 85 85 Q 60 90 35 85 Z" fill="#e67e22" stroke="#d35400" stroke-width="3" />
+  <path d="M 40 50 Q 60 43 80 50 L 80 80 Q 60 84 40 80 Z" fill="#f39c12" />
+  <!-- Melted Cheese / Chocolate Drizzle -->
+  <path d="M 45 55 Q 55 65 65 55 T 85 60" stroke="#f1c40f" stroke-width="4" fill="none" stroke-linecap="round" />
+  <path d="M 40 65 Q 55 75 70 65 T 80 70" stroke="#6e2c00" stroke-width="3" fill="none" stroke-linecap="round" />
+</svg>

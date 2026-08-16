@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 200" width="160" height="200">
+  <defs>
+    <linearGradient id="pinkCupTomoro" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffb6c1" />
+      <stop offset="100%" stop-color="#f8a5c2" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sparkles -->
+  <path d="M 22 35 L 24 40 L 29 42 L 24 44 L 22 49 L 20 44 L 15 42 L 20 40 Z" fill="#20bf6b" opacity="0.6" />
+  <path d="M 140 100 L 141.5 104 L 145.5 105.5 L 141.5 107 L 140 111 L 138.5 107 L 134.5 105.5 L 138.5 104 Z" fill="#e84393" opacity="0.6" />
+
+  <!-- Shadow -->
+  <ellipse cx="80" cy="188" rx="45" ry="8" fill="#e84393" opacity="0.15" />
+
+  <!-- Cup Base -->
+  <path d="M 40 55 L 48 175 Q 80 185 112 175 L 120 55 Z" fill="url(#pinkCupTomoro)" stroke="#e84393" stroke-width="2" />
+
+  <!-- Matcha Green Drink Layer Top -->
+  <path d="M 36 55 C 36 32, 124 32, 124 55 Z" fill="#88d8b0" stroke="#26de81" stroke-width="2" />
+  <ellipse cx="80" cy="55" rx="44" ry="8" fill="#a8e6cf" stroke="#20bf6b" stroke-width="1.5" />
+
+  <!-- Matcha Ice Cubes / Foam Bubbles -->
+  <circle cx="65" cy="46" r="6" fill="#d4f5e9" />
+  <circle cx="80" cy="42" r="8" fill="#d4f5e9" />
+  <circle cx="96" cy="47" r="7" fill="#d4f5e9" />
+
+  <!-- Cup Logo & Text -->
+  <g transform="translate(80, 115) scale(0.95)">
+    <!-- Cat Mascot Icon -->
+    <path d="M -16 -20 L -16 -32 L -7 -25 L 7 -25 L 16 -32 L 16 -20 Q 16 -5 0 0 Q -16 -5 -16 -20 Z" fill="none" stroke="#2d3436" stroke-width="2" />
+    <circle cx="-6" cy="-15" r="2" fill="#2d3436" />
+    <circle cx="6" cy="-15" r="2" fill="#2d3436" />
+    <path d="M -3 -10 Q 0 -7 3 -10" fill="none" stroke="#2d3436" stroke-width="1.5" />
+
+    <text x="0" y="14" font-family="'Outfit', sans-serif" font-weight="900" font-size="12" fill="#2d3436" text-anchor="middle" letter-spacing="1">TOMORO</text>
+    <text x="0" y="24" font-family="'Outfit', sans-serif" font-weight="600" font-size="8" fill="#2d3436" text-anchor="middle">COFFEE</text>
+  </g>
+</svg>

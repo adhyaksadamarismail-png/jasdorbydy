@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <rect width="120" height="120" rx="16" fill="#fff5f7" />
+  <!-- Cup Base -->
+  <path d="M 40 40 L 45 90 Q 60 98 75 90 L 80 40 Z" fill="#6c5ce7" opacity="0.1" />
+  <path d="M 42 42 L 46 88 Q 60 95 74 88 L 78 42 Z" fill="#b84d6b" />
+  <!-- Coffee Liquid Layer -->
+  <path d="M 43 55 L 46 88 Q 60 95 74 88 L 77 55 Z" fill="#543310" />
+  <!-- Milk Foam Top -->
+  <ellipse cx="60" cy="42" rx="18" ry="6" fill="#ffffff" />
+  <!-- Straw -->
+  <line x1="68" y1="20" x2="58" y2="42" stroke="#ff7675" stroke-width="4" stroke-linecap="round" />
+  <!-- Heart Latte Art -->
+  <path d="M 57 40 C 57 37, 59 36, 60 38 C 61 36, 63 37, 63 40 C 63 42, 60 44, 60 44 C 60 44, 57 42, 57 40 Z" fill="#74512D" />
+</svg>

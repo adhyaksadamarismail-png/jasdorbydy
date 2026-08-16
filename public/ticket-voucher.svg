@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120">
+  <defs>
+    <linearGradient id="ticketBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffb6c1" />
+      <stop offset="100%" stop-color="#ff7675" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sparkles -->
+  <path d="M 15 20 L 16.5 24 L 20.5 25.5 L 16.5 27 L 15 31 L 13.5 27 L 9.5 25.5 L 13.5 24 Z" fill="#e84393" opacity="0.6" />
+  <path d="M 142 90 L 143.5 94 L 147.5 95.5 L 143.5 97 L 142 101 L 140.5 97 L 136.5 95.5 L 140.5 94 Z" fill="#e84393" opacity="0.6" />
+
+  <!-- Shadow -->
+  <ellipse cx="80" cy="108" rx="60" ry="8" fill="#e84393" opacity="0.15" />
+
+  <!-- Ticket Body with Cutouts -->
+  <g transform="translate(80, 56) rotate(-8)">
+    <path d="
+      M -65 -35 
+      L 65 -35 
+      A 10 10 0 0 0 65 -15 
+      L 65 15 
+      A 10 10 0 0 0 65 35 
+      L -65 35 
+      A 10 10 0 0 0 -65 15 
+      L -65 -15 
+      A 10 10 0 0 0 -65 -35 Z"
+      fill="url(#ticketBg)" 
+      stroke="#d63031" 
+      stroke-width="2" 
+    />
+    
+    <!-- Dashed Inner Border -->
+    <rect x="-58" y="-28" width="116" height="56" rx="6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4,3" />
+
+    <text x="0" y="-4" font-family="'Outfit', sans-serif" font-weight="900" font-size="13" fill="#ffffff" text-anchor="middle" letter-spacing="1">ADMIT</text>
+    <text x="0" y="12" font-family="'Outfit', sans-serif" font-weight="900" font-size="13" fill="#ffffff" text-anchor="middle" letter-spacing="1">ONE</text>
+  </g>
+</svg>
