@@ -128,11 +128,11 @@ export default function CheckoutPage() {
 
     let pickupInfo = 'Sekarang';
     if (pickupType === 'Dijadwalkan') {
-      if (!scheduledDate || !scheduledTime) {
-        setErrorMessage('Mohon lengkapi Tanggal dan Jam Pick Up.');
+      if (!scheduledTime) {
+        setErrorMessage('Mohon pilih Jam Pick Up.');
         return;
       }
-      pickupInfo = `${scheduledDate} jam ${scheduledTime}`;
+      pickupInfo = `Jam ${scheduledTime} WIB`;
     }
 
     // Format WhatsApp Message with strict customization diff rules
@@ -308,29 +308,19 @@ Mohon konfirmasinya terimakasih`;
               </button>
             </div>
 
-            {/* Scheduled Date & Time Pickers */}
+            {/* Scheduled Time Picker */}
             {pickupType === 'Dijadwalkan' && (
-              <div className="grid grid-cols-2 gap-2 pt-2 bg-pink-50/50 p-3 rounded-xl border border-pink-100">
-                <div>
-                  <label className="block text-[11px] font-bold text-gray-600 mb-1">Pilih Tanggal</label>
-                  <input
-                    type="date"
-                    required
-                    value={scheduledDate}
-                    onChange={(e) => setScheduledDate(e.target.value)}
-                    className="w-full p-2 rounded-lg border border-pink-200 text-xs font-semibold text-gray-800 bg-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-gray-600 mb-1">Pilih Jam</label>
-                  <input
-                    type="time"
-                    required
-                    value={scheduledTime}
-                    onChange={(e) => setScheduledTime(e.target.value)}
-                    className="w-full p-2 rounded-lg border border-pink-200 text-xs font-semibold text-gray-800 bg-white"
-                  />
-                </div>
+              <div className="pt-2 bg-pink-50/50 p-3 rounded-xl border border-pink-100">
+                <label className="block text-[11px] font-bold text-gray-600 mb-1">
+                  Pilih Jam Pick Up <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="time"
+                  required
+                  value={scheduledTime}
+                  onChange={(e) => setScheduledTime(e.target.value)}
+                  className="w-full p-2.5 rounded-lg border border-pink-200 text-xs font-semibold text-gray-800 bg-white outline-none focus:border-[#e84393]"
+                />
               </div>
             )}
           </div>
