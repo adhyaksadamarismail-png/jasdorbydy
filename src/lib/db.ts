@@ -32,8 +32,9 @@ const memoryStore: any = {
 };
 
 try {
-  // Try loading native better-sqlite3 module
-  const Database = require('better-sqlite3');
+  // Use dynamic eval require so Turbopack/Webpack doesn't fail native binary bundling on Vercel
+  const req = eval('require');
+  const Database = req('better-sqlite3');
   const isVercel = process.env.VERCEL === '1';
   const defaultDbPath = path.join(process.cwd(), 'data', 'jasdor.db');
   let dbPath = defaultDbPath;
