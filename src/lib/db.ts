@@ -75,6 +75,15 @@ export function initDb() {
     );
   `);
 
+  // Seed default Brands first to satisfy FOREIGN KEY constraint
+  db.prepare(`
+    INSERT OR REPLACE INTO brands (id, name, slug, logo_url, status)
+    VALUES 
+      ('brand_kopi_kenangan', 'Kopi Kenangan', 'kopi-kenangan', '/kopi-kenangan-logo.svg', 'ON'),
+      ('brand_tomoro', 'Tomoro Coffee', 'tomoro-coffee', '/tomoro-logo.svg', 'OFF'),
+      ('brand_voucher', 'Voucher & Promo', 'voucher-promo', '/voucher-logo.svg', 'OFF')
+  `).run();
+
   // Outlets Table
   db.exec(`
     CREATE TABLE IF NOT EXISTS outlets (
