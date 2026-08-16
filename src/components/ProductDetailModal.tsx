@@ -126,6 +126,7 @@ export default function ProductDetailModal({
     if (config.has_topping && toppings.length > 0) selected_customization.topping = toppings;
     if (notes.trim()) selected_customization.notes = notes.trim();
 
+    const isSingle = !!product.is_single_item;
     const cartItem: CartItem = {
       cart_item_id: initialCartItem?.cart_item_id || `item_${Date.now()}_${Math.random()}`,
       product_id: product.id,
@@ -136,6 +137,7 @@ export default function ProductDetailModal({
       selected_customization,
       unit_price: unitPrice,
       total_price: totalPrice,
+      is_single_item: isSingle,
     };
 
     onAddToCart(cartItem);
