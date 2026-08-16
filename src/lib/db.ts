@@ -2,16 +2,35 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 
-const dataDir = path.join(process.cwd(), 'data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
+const isVercel = process.env.VERCEL === '1';
+const defaultDbPath = path.join(process.cwd(), 'data', 'jasdor.db');
+let dbPath = defaultDbPath;
+
+if (isVercel) {
+  const tmpDbPath = '/tmp/jasdor.db';
+  if (!fs.existsSync(tmpDbPath) && fs.existsSync(defaultDbPath)) {
+    try {
+      fs.copyFileSync(defaultDbPath, tmpDbPath);
+    } catch (e) {
+      console.error('Failed copying database to /tmp:', e);
+    }
+  }
+  if (fs.existsSync(tmpDbPath)) {
+    dbPath = tmpDbPath;
+  }
+} else {
+  const dataDir = path.join(process.cwd(), 'data');
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
 }
 
-const dbPath = path.join(dataDir, 'jasdor.db');
 const db = new Database(dbPath);
 
-// Enable WAL mode for better performance
-db.pragma('journal_mode = WAL');
+// Enable WAL mode if not on Vercel read-only filesystem
+try {
+  db.pragma('journal_mode = WAL');
+} catch (e) {}
 
 // Initialize database schema and initial seed data
 export function initDb() {
