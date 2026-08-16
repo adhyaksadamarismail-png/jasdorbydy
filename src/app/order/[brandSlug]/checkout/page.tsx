@@ -135,25 +135,41 @@ export default function CheckoutPage() {
       pickupInfo = `${scheduledDate} jam ${scheduledTime}`;
     }
 
-    // Format WhatsApp Message exactly as requested
+    // Format WhatsApp Message with strict customization diff rules
     let menuTextLines = '';
     cart.forEach((item) => {
-      menuTextLines += `• ${item.name} x ${item.qty} — Rp${item.total_price.toLocaleString('id-ID')}\n`;
-      
       const cust = item.selected_customization;
-      const detailsList: string[] = [];
-      if (cust.suhu) detailsList.push(`Suhu: ${cust.suhu}`);
-      if (cust.ukuran) detailsList.push(`Ukuran: ${cust.ukuran.name}`);
-      if (cust.es) detailsList.push(`Es: ${cust.es}`);
-      if (cust.gula) detailsList.push(`Gula: ${cust.gula}`);
-      if (cust.beans) detailsList.push(`Beans: ${cust.beans.name}`);
-      if (cust.syrup) detailsList.push(`Syrup: ${cust.syrup.map((s) => s.name).join(', ')}`);
-      if (cust.topping) detailsList.push(`Topping: ${cust.topping.map((t) => t.name).join(', ')}`);
-      if (cust.notes) detailsList.push(`Catatan: ${cust.notes}`);
+      const diffs: string[] = [];
 
-      if (detailsList.length > 0) {
-        menuTextLines += `  (${detailsList.join(', ')})\n`;
+      if (cust) {
+        if (cust.suhu && cust.suhu !== 'Ice') {
+          diffs.push(`(${cust.suhu})`);
+        }
+        if (cust.ukuran && cust.ukuran.name && cust.ukuran.name !== 'Normal') {
+          diffs.push(`(${cust.ukuran.name})`);
+        }
+        if (cust.es && cust.es !== 'Normal') {
+          diffs.push(`(${cust.es})`);
+        }
+        if (cust.gula && cust.gula !== 'Normal') {
+          diffs.push(`(${cust.gula})`);
+        }
+        if (cust.beans && cust.beans.name && cust.beans.name !== 'Kenangan Blend') {
+          diffs.push(`(${cust.beans.name})`);
+        }
+        if (cust.syrup && cust.syrup.length > 0) {
+          cust.syrup.forEach((s) => diffs.push(`(${s.name})`));
+        }
+        if (cust.topping && cust.topping.length > 0) {
+          cust.topping.forEach((t) => diffs.push(`(${t.name})`));
+        }
+        if (cust.notes && cust.notes.trim()) {
+          diffs.push(`(Catatan: ${cust.notes.trim()})`);
+        }
       }
+
+      const diffsSuffix = diffs.length > 0 ? ` ${diffs.join(' ')}` : '';
+      menuTextLines += `• ${item.name} x ${item.qty} — Rp${item.total_price.toLocaleString('id-ID')}${diffsSuffix}\n`;
     });
 
     const brandName = brand ? brand.name : 'Kopi Kenangan';
