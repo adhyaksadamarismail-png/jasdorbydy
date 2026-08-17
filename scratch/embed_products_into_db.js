@@ -66,7 +66,7 @@ const MENU = [
   { id: 18, cat: "Kopi", name: "Pistachio Aren Latte", img: "https://i.ibb.co.com/8Hyvm5b/Frame-1410112862.png", origPrice: 19000, salePrice: 13500 },
   { id: 19, cat: "Kopi", name: "Matcha Espresso", img: "https://i.ibb.co.com/yFq7sPD7/Frame-1410112839.png", origPrice: 26000, salePrice: 17000 },
   { id: 20, cat: "Kopi", name: "Avocado Coffee", img: "https://i.ibb.co.com/5PXyL5H/Frame-1410112843.png", origPrice: 28000, salePrice: 18000 },
-  { id: 45, cat: "Kopi", name: "Kopi Kenangan Mantan", img: "https://i.ibb.co.com/0yQbyxDQ/Frame-1410112838.png", origPrice: 21000, salePrice: 14500 },
+  { id: 45, cat: "Kopi", name: "Kopi Kenangan Mantan", img: "https://i.ibb.co.com/0yQbyxDQ/Frame-1410112838.png", origPrice: 21000, salePrice: 13000 },
   { id: 46, cat: "Kopi", name: "Salted Caramel Macchiato", img: "https://i.ibb.co.com/3YhzGVh0/Frame-1410112845.png", origPrice: 28000, salePrice: 18000 },
 
   // ── NON-KOPI REGULER ──

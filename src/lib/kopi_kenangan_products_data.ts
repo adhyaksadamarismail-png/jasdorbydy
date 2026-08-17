@@ -425,7 +425,7 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "name": "Kopi Kenangan Mantan",
     "image": "https://i.ibb.co.com/0yQbyxDQ/Frame-1410112838.png",
     "description": "Kopi Kenangan Mantan segar dan nikmat khas Kopi Kenangan.",
-    "price": 14500,
+    "price": 13000,
     "category": "Kopi",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
