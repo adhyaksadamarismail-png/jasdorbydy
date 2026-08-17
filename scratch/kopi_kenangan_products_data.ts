@@ -123,10 +123,10 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "id": "kk_prod_211",
     "brand_id": "brand_kopi_kenangan",
     "name": "Banana Americano",
-    "image": "https://i.ibb.co.com/Z6KK2CYy/Frame-1410112853.png",
+    "image": "https://iili.io/Cs9tSoJ.jpg",
     "description": "Banana Americano segar dan nikmat khas Kopi Kenangan.",
     "price": 14500,
-    "category": "Kopi",
+    "category": "Menu Baru",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
     "is_single_item": 1
@@ -1446,7 +1446,7 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "image": "https://iili.io/Cs9ZyyF.jpg",
     "description": "Seri HAECHAN A SIP OF SUNSHINE - Korean Banana Latte segar manis pisang khas Korea.",
     "price": 19000,
-    "category": "Haechan Series",
+    "category": "Menu Baru",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
     "is_single_item": 0
@@ -1458,7 +1458,7 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "image": "https://iili.io/Cs9D3Ne.jpg",
     "description": "Seri HAECHAN A SIP OF SUNSHINE - Cokelat kaya rasa berpadu dengan aroma rasa pisang manis.",
     "price": 19000,
-    "category": "Haechan Series",
+    "category": "Menu Baru",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
     "is_single_item": 0
@@ -1470,7 +1470,7 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "image": "https://iili.io/Cs9gGgs.jpg",
     "description": "Seri HAECHAN A SIP OF SUNSHINE - Soft baked cookie lembut dengan kismis dan oat bernutrisi.",
     "price": 17000,
-    "category": "Haechan Series",
+    "category": "Menu Baru",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":false,\"has_ukuran\":false,\"has_es\":false,\"has_gula\":false,\"has_beans\":false,\"has_syrup\":false,\"has_topping\":false}",
     "is_single_item": 0
@@ -1482,7 +1482,7 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "image": "https://iili.io/Cs9rHIp.jpg",
     "description": "Seri HAECHAN A SIP OF SUNSHINE - Soft baked cookie manis perpaduan cokelat & pisang.",
     "price": 17000,
-    "category": "Haechan Series",
+    "category": "Menu Baru",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":false,\"has_ukuran\":false,\"has_es\":false,\"has_gula\":false,\"has_beans\":false,\"has_syrup\":false,\"has_topping\":false}",
     "is_single_item": 0
@@ -1494,7 +1494,7 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "image": "https://iili.io/Cs943wQ.jpg",
     "description": "Seri HAECHAN A SIP OF SUNSHINE - Soft baked cookie dengan sentuhan madu manis harum.",
     "price": 17000,
-    "category": "Haechan Series",
+    "category": "Menu Baru",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":false,\"has_ukuran\":false,\"has_es\":false,\"has_gula\":false,\"has_beans\":false,\"has_syrup\":false,\"has_topping\":false}",
     "is_single_item": 0

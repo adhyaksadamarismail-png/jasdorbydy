@@ -5,7 +5,7 @@ const Database = require('better-sqlite3');
 const dbPath = path.join(__dirname, '../data/jasdor.db');
 const db = new Database(dbPath);
 
-console.log('--- Updating Product Data & Database ---');
+console.log('--- Updating Product Data & Database for Menu Baru (Haechan Series) ---');
 
 // Ensure is_single_item column exists
 try {
@@ -32,6 +32,8 @@ const imageUpdates = [
   { namePattern: /Butterscotch.*Frappe/i, newImage: 'https://iili.io/Cs9sTgt.jpg' },
 ];
 
+const haechanIds = ['kk_prod_301', 'kk_prod_302', 'kk_prod_303', 'kk_prod_304', 'kk_prod_305', 'kk_prod_306'];
+
 // Update existing items in array
 products = products.map((p) => {
   for (const update of imageUpdates) {
@@ -39,10 +41,13 @@ products = products.map((p) => {
       p.image = update.newImage;
     }
   }
+  if (haechanIds.includes(p.id) || p.category === 'Haechan Series') {
+    p.category = 'Menu Baru';
+  }
   return p;
 });
 
-// 3. New Haechan Series Products & Frappes
+// 3. New Haechan Series Products (Category: Menu Baru) & Frappes
 const newItems = [
   {
     id: 'kk_prod_301',
@@ -51,7 +56,7 @@ const newItems = [
     image: 'https://iili.io/Cs9ZyyF.jpg',
     description: 'Seri HAECHAN A SIP OF SUNSHINE - Korean Banana Latte segar manis pisang khas Korea.',
     price: 19000,
-    category: 'Haechan Series',
+    category: 'Menu Baru',
     availability: 'ON',
     customization_json: JSON.stringify({ has_suhu: true, has_ukuran: true, has_es: true, has_gula: true, has_beans: true, has_syrup: true, has_topping: true }),
     is_single_item: 0,
@@ -63,7 +68,7 @@ const newItems = [
     image: 'https://iili.io/Cs9tSoJ.jpg',
     description: 'Seri HAECHAN A SIP OF SUNSHINE - Espresso berkombinasi rasa pisang manis menyegarkan.',
     price: 18000,
-    category: 'Haechan Series',
+    category: 'Menu Baru',
     availability: 'ON',
     customization_json: JSON.stringify({ has_suhu: true, has_ukuran: true, has_es: true, has_gula: true, has_beans: true, has_syrup: true, has_topping: true }),
     is_single_item: 0,
@@ -75,7 +80,7 @@ const newItems = [
     image: 'https://iili.io/Cs9D3Ne.jpg',
     description: 'Seri HAECHAN A SIP OF SUNSHINE - Cokelat kaya rasa berpadu dengan aroma rasa pisang manis.',
     price: 19000,
-    category: 'Haechan Series',
+    category: 'Menu Baru',
     availability: 'ON',
     customization_json: JSON.stringify({ has_suhu: true, has_ukuran: true, has_es: true, has_gula: true, has_beans: true, has_syrup: true, has_topping: true }),
     is_single_item: 0,
@@ -87,7 +92,7 @@ const newItems = [
     image: 'https://iili.io/Cs9gGgs.jpg',
     description: 'Seri HAECHAN A SIP OF SUNSHINE - Soft baked cookie lembut dengan kismis dan oat bernutrisi.',
     price: 17000,
-    category: 'Haechan Series',
+    category: 'Menu Baru',
     availability: 'ON',
     customization_json: JSON.stringify({ has_suhu: false, has_ukuran: false, has_es: false, has_gula: false, has_beans: false, has_syrup: false, has_topping: false }),
     is_single_item: 0,
@@ -99,7 +104,7 @@ const newItems = [
     image: 'https://iili.io/Cs9rHIp.jpg',
     description: 'Seri HAECHAN A SIP OF SUNSHINE - Soft baked cookie manis perpaduan cokelat & pisang.',
     price: 17000,
-    category: 'Haechan Series',
+    category: 'Menu Baru',
     availability: 'ON',
     customization_json: JSON.stringify({ has_suhu: false, has_ukuran: false, has_es: false, has_gula: false, has_beans: false, has_syrup: false, has_topping: false }),
     is_single_item: 0,
@@ -111,7 +116,7 @@ const newItems = [
     image: 'https://iili.io/Cs943wQ.jpg',
     description: 'Seri HAECHAN A SIP OF SUNSHINE - Soft baked cookie dengan sentuhan madu manis harum.',
     price: 17000,
-    category: 'Haechan Series',
+    category: 'Menu Baru',
     availability: 'ON',
     customization_json: JSON.stringify({ has_suhu: false, has_ukuran: false, has_es: false, has_gula: false, has_beans: false, has_syrup: false, has_topping: false }),
     is_single_item: 0,
@@ -156,8 +161,12 @@ const newItems = [
 
 // Add new items if they don't already exist in products array
 for (const item of newItems) {
-  if (!products.some((p) => p.id === item.id || p.name.toLowerCase() === item.name.toLowerCase())) {
+  const existing = products.find((p) => p.id === item.id || p.name.toLowerCase() === item.name.toLowerCase());
+  if (!existing) {
     products.push(item);
+  } else {
+    existing.category = item.category;
+    existing.image = item.image;
   }
 }
 
@@ -201,4 +210,4 @@ const transaction = db.transaction((itemArray) => {
 });
 
 transaction(products);
-console.log('Successfully upserted all products into SQLite DB!');
+console.log('Successfully upserted all products into SQLite DB with category "Menu Baru"!');

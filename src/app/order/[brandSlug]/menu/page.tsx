@@ -28,7 +28,7 @@ export default function MenuPage() {
   const [activeTabType, setActiveTabType] = useState<'reguler' | 'satuan'>('reguler');
 
   // Filter & Search states
-  const [activeCategory, setActiveCategory] = useState<string>('Semua');
+  const [activeCategory, setActiveCategory] = useState<string>('Menu Baru');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Cart State (stored in sessionStorage)
@@ -240,17 +240,30 @@ export default function MenuPage() {
   // Categorized items by tab selection
   const isTabSatuan = activeCategory === 'Menu Satuan' || activeTabType === 'satuan';
 
-  const regularProducts = searchFilteredProducts.filter(
-    (p) => !p.is_single_item && (activeCategory === 'Semua' || p.category === activeCategory)
-  );
+  const regularProducts = searchFilteredProducts.filter((p) => {
+    if (p.is_single_item) return false;
+    if (activeCategory === 'Menu Baru') {
+      return p.category === 'Menu Baru' || p.category === 'Haechan Series';
+    }
+    return p.category === activeCategory;
+  });
+
   const singleItemProducts = searchFilteredProducts.filter(
-    (p) => p.is_single_item && (activeCategory === 'Semua' || p.category === activeCategory)
+    (p) => p.is_single_item
   );
 
   const displayedProducts = isTabSatuan ? singleItemProducts : regularProducts;
 
-  // Unique categories list for regular items
-  const categories = ['Semua', ...Array.from(new Set(products.filter((p) => !p.is_single_item).map((p) => p.category)))];
+  // Unique categories list for regular items ("Menu Baru" first, then "Kopi", etc.; "Semua" removed)
+  const rawCategories = Array.from(
+    new Set(products.filter((p) => !p.is_single_item).map((p) => p.category))
+  ).filter((c) => c && c !== 'Semua' && c !== 'Haechan Series');
+
+  const categories = [
+    'Menu Baru',
+    'Kopi',
+    ...rawCategories.filter((c) => c !== 'Menu Baru' && c !== 'Kopi'),
+  ];
 
   const totalCartPrice = cart.reduce((sum, item) => sum + item.total_price, 0);
 
@@ -352,7 +365,7 @@ export default function MenuPage() {
           type="button"
           onClick={() => {
             setActiveTabType('reguler');
-            setActiveCategory('Semua');
+            setActiveCategory('Menu Baru');
           }}
           className={`py-2 px-3 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 ${
             activeTabType === 'reguler'
