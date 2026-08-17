@@ -214,6 +214,18 @@ export function initDb() {
       db.exec('ALTER TABLE products ADD COLUMN is_single_item INTEGER DEFAULT 0');
     } catch (e) {}
 
+    // Auto-clean any existing duplicate products for the same brand and item name
+    try {
+      db.exec(`
+        DELETE FROM products 
+        WHERE rowid NOT IN (
+          SELECT MAX(rowid) 
+          FROM products 
+          GROUP BY brand_id, LOWER(TRIM(name))
+        );
+      `);
+    } catch (e) {}
+
     // Orders Log Table
     db.exec(`
       CREATE TABLE IF NOT EXISTS orders (

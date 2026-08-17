@@ -73,18 +73,34 @@ export async function POST(req: Request) {
     const prodAvail = availability || 'ON';
     const custJson = typeof customization_json === 'string' ? customization_json : JSON.stringify(customization_json || {});
 
-    // 1. Sync to SQLite
+    // Look for existing record by explicit ID or by matching brand_id and name
+    let existingProd: { id: string } | undefined;
     if (id) {
+      existingProd = db.prepare('SELECT id FROM products WHERE id = ?').get(id) as { id: string } | undefined;
+    }
+    if (!existingProd && brand_id && name) {
+      existingProd = db.prepare('SELECT id FROM products WHERE brand_id = ? AND LOWER(TRIM(name)) = LOWER(TRIM(?)) ORDER BY id DESC').get(brand_id, name) as { id: string } | undefined;
+    }
+
+    const targetId = existingProd ? existingProd.id : (id || `prod_${Date.now()}`);
+
+    // 1. Sync to SQLite (Update in place if exists, or Insert single record)
+    if (existingProd) {
       db.prepare(`
         UPDATE products
         SET brand_id = ?, name = ?, image = ?, description = ?, price = ?, category = ?, availability = ?, is_single_item = ?, customization_json = ?
         WHERE id = ?
-      `).run(brand_id, name, prodImage, description || '', price, prodCategory, prodAvail, isSingleVal, custJson, id);
+      `).run(brand_id, name, prodImage, description || '', price, prodCategory, prodAvail, isSingleVal, custJson, targetId);
     } else {
       db.prepare(`
         INSERT INTO products (id, brand_id, name, image, description, price, category, availability, is_single_item, customization_json)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).run(targetId, brand_id, name, prodImage, description || '', price, prodCategory, prodAvail, isSingleVal, custJson);
+    }
+
+    // Purge any leftover duplicate rows in SQLite for this brand + name
+    if (brand_id && name) {
+      db.prepare('DELETE FROM products WHERE brand_id = ? AND LOWER(TRIM(name)) = LOWER(TRIM(?)) AND id != ?').run(brand_id, name, targetId);
     }
 
     // 2. Sync to Supabase Single Source of Truth
@@ -108,6 +124,24 @@ export async function POST(req: Request) {
             },
             { onConflict: 'id' }
           );
+
+        // Purge duplicates in Supabase as well
+        if (brand_id && name) {
+          const { data: dupSupas } = await supabase
+            .from('products')
+            .select('id, name')
+            .eq('brand_id', brand_id);
+          
+          if (dupSupas) {
+            const dupIds = dupSupas
+              .filter((p: any) => p.name.trim().toLowerCase() === name.trim().toLowerCase() && p.id !== targetId)
+              .map((p: any) => p.id);
+            
+            if (dupIds.length > 0) {
+              await supabase.from('products').delete().in('id', dupIds);
+            }
+          }
+        }
       } catch (supaErr) {
         console.error('Failed syncing product to Supabase:', supaErr);
       }
