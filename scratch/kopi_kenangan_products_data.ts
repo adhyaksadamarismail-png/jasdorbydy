@@ -124,12 +124,12 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "brand_id": "brand_kopi_kenangan",
     "name": "Banana Americano",
     "image": "https://iili.io/Cs9tSoJ.jpg",
-    "description": "Banana Americano segar dan nikmat khas Kopi Kenangan.",
-    "price": 14500,
+    "description": "Seri HAECHAN A SIP OF SUNSHINE - Espresso berkombinasi rasa pisang manis menyegarkan.",
+    "price": 18000,
     "category": "Menu Baru",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
-    "is_single_item": 1
+    "is_single_item": 0
   },
   {
     "id": "kk_prod_212",
@@ -192,36 +192,12 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "is_single_item": 0
   },
   {
-    "id": "kk_prod_2",
-    "brand_id": "brand_kopi_kenangan",
-    "name": "Americano",
-    "image": "https://i.ibb.co.com/Z6KK2CYy/Frame-1410112853.png",
-    "description": "Americano segar dan nikmat khas Kopi Kenangan.",
-    "price": 12500,
-    "category": "Kopi",
-    "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
-    "is_single_item": 0
-  },
-  {
     "id": "kk_prod_3",
     "brand_id": "brand_kopi_kenangan",
     "name": "Cappuccino",
     "image": "https://i.ibb.co.com/wZ6ySXyR/Frame-1410112852.png",
     "description": "Cappuccino segar dan nikmat khas Kopi Kenangan.",
     "price": 15000,
-    "category": "Kopi",
-    "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
-    "is_single_item": 0
-  },
-  {
-    "id": "kk_prod_4",
-    "brand_id": "brand_kopi_kenangan",
-    "name": "Spanish Latte",
-    "image": "https://i.ibb.co.com/DHVVbdkX/Frame-1410112842.png",
-    "description": "Spanish Latte segar dan nikmat khas Kopi Kenangan.",
-    "price": 13500,
     "category": "Kopi",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
@@ -312,18 +288,6 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "is_single_item": 0
   },
   {
-    "id": "kk_prod_12",
-    "brand_id": "brand_kopi_kenangan",
-    "name": "Toffee Nut Latte",
-    "image": "https://i.ibb.co.com/zVbBCRkY/Frame-1410112861.png",
-    "description": "Toffee Nut Latte segar dan nikmat khas Kopi Kenangan.",
-    "price": 13500,
-    "category": "Kopi",
-    "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
-    "is_single_item": 0
-  },
-  {
     "id": "kk_prod_13",
     "brand_id": "brand_kopi_kenangan",
     "name": "Toffee Nut Aren Latte",
@@ -384,18 +348,6 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "is_single_item": 0
   },
   {
-    "id": "kk_prod_18",
-    "brand_id": "brand_kopi_kenangan",
-    "name": "Pistachio Aren Latte",
-    "image": "https://i.ibb.co.com/8Hyvm5b/Frame-1410112862.png",
-    "description": "Pistachio Aren Latte segar dan nikmat khas Kopi Kenangan.",
-    "price": 13500,
-    "category": "Kopi",
-    "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
-    "is_single_item": 0
-  },
-  {
     "id": "kk_prod_19",
     "brand_id": "brand_kopi_kenangan",
     "name": "Matcha Espresso",
@@ -414,18 +366,6 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "image": "https://i.ibb.co.com/5PXyL5H/Frame-1410112843.png",
     "description": "Avocado Coffee segar dan nikmat khas Kopi Kenangan.",
     "price": 18000,
-    "category": "Kopi",
-    "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
-    "is_single_item": 0
-  },
-  {
-    "id": "kk_prod_45",
-    "brand_id": "brand_kopi_kenangan",
-    "name": "Kopi Kenangan Mantan",
-    "image": "https://iili.io/CsAJ6x4.jpg",
-    "description": "Kopi Kenangan Mantan segar dan nikmat khas Kopi Kenangan.",
-    "price": 13000,
     "category": "Kopi",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":true,\"has_syrup\":true,\"has_topping\":true}",
@@ -492,18 +432,6 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "is_single_item": 0
   },
   {
-    "id": "kk_prod_25",
-    "brand_id": "brand_kopi_kenangan",
-    "name": "Choco Caramel",
-    "image": "https://i.ibb.co.com/YFz0B2vk/Frame-1410112869.png",
-    "description": "Choco Caramel segar dan nikmat khas Kopi Kenangan.",
-    "price": 18000,
-    "category": "Non-Kopi",
-    "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
-    "is_single_item": 0
-  },
-  {
     "id": "kk_prod_26",
     "brand_id": "brand_kopi_kenangan",
     "name": "Mocha Caramel",
@@ -540,18 +468,6 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "is_single_item": 0
   },
   {
-    "id": "kk_prod_29",
-    "brand_id": "brand_kopi_kenangan",
-    "name": "Raspberry Hibiscus",
-    "image": "https://i.ibb.co.com/99wF5vh5/Frame-1410112874.png",
-    "description": "Raspberry Hibiscus segar dan nikmat khas Kopi Kenangan.",
-    "price": 14000,
-    "category": "Non-Kopi",
-    "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
-    "is_single_item": 0
-  },
-  {
     "id": "kk_prod_30",
     "brand_id": "brand_kopi_kenangan",
     "name": "Hazelnut Choco Milk Tea",
@@ -561,18 +477,6 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "category": "Non-Kopi",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
-    "is_single_item": 0
-  },
-  {
-    "id": "kk_prod_32",
-    "brand_id": "brand_kopi_kenangan",
-    "name": "Fresh Lemonade",
-    "image": "https://i.ibb.co.com/FqHmjmM4/Frame-1410112870.png",
-    "description": "Fresh Lemonade segar dan nikmat khas Kopi Kenangan.",
-    "price": 12500,
-    "category": "Non-Kopi",
-    "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
     "is_single_item": 0
   },
   {
@@ -660,18 +564,6 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "is_single_item": 0
   },
   {
-    "id": "kk_prod_49",
-    "brand_id": "brand_kopi_kenangan",
-    "name": "Lemon Black Tea",
-    "image": "https://i.ibb.co.com/FqHmjmM4/Frame-1410112870.png",
-    "description": "Lemon Black Tea segar dan nikmat khas Kopi Kenangan.",
-    "price": 12500,
-    "category": "Non-Kopi",
-    "availability": "ON",
-    "customization_json": "{\"has_suhu\":true,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
-    "is_single_item": 0
-  },
-  {
     "id": "kk_prod_50",
     "brand_id": "brand_kopi_kenangan",
     "name": "Kenangan Milk Tea",
@@ -729,18 +621,6 @@ export const KOPI_KENANGAN_PRODUCTS = [
     "category": "Non-Kopi",
     "availability": "ON",
     "customization_json": "{\"has_suhu\":true,\"has_ukuran\":false,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
-    "is_single_item": 0
-  },
-  {
-    "id": "kk_prod_55",
-    "brand_id": "brand_kopi_kenangan",
-    "name": "OG Thai Tea",
-    "image": "https://i.ibb.co.com/Zp4Nwdk2/Frame-1410112877.png",
-    "description": "OG Thai Tea segar dan nikmat khas Kopi Kenangan.",
-    "price": 13500,
-    "category": "Non-Kopi",
-    "availability": "ON",
-    "customization_json": "{\"has_suhu\":false,\"has_ukuran\":true,\"has_es\":true,\"has_gula\":true,\"has_beans\":false,\"has_syrup\":true,\"has_topping\":true}",
     "is_single_item": 0
   },
   {
