@@ -29,13 +29,13 @@ export default function Homepage() {
   }
 
   // 1. Prioritas Status Check: If Website Status is OFF, display Fullscreen CLOSED Page
-  if (settings && settings.website_status === 'OFF') {
+  if (settings && String(settings.website_status).toUpperCase() === 'OFF') {
     return <ClosedPage settings={settings} />;
   }
 
   const siteName = settings?.site_name || 'Jasdorbydy';
   const logoUrl = settings?.logo_url || '/logo-store.png';
-  const isOrderGloballyOn = settings?.order_status === 'ON';
+  const isOrderGloballyOn = settings ? String(settings.order_status).toUpperCase() === 'ON' : true;
 
   // Map hero illustration assets for brand cards matching reference image
   const getHeroIllustration = (slug: string) => {

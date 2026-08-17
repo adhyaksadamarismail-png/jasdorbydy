@@ -11,46 +11,31 @@ export function useRealtimeSettings() {
 
   const fetchSettings = useCallback(async () => {
     try {
-      // 1. Load from local API endpoint
+      // 1. Fetch from local API
       const res = await fetch('/api/settings');
       const data = await res.json();
       let currentSettings: WebsiteSettings | null = data.success ? data.settings : null;
 
-      // 2. If Supabase is configured, overlay latest website_status from Supabase single source of truth
+      // 2. Fetch from Supabase if configured
       if (isSupabaseConfigured) {
         try {
-          const { data: supaData, error: supaErr } = await supabase
-            .from('site_settings')
+          const { data: supaSet } = await supabase
+            .from('website_settings')
             .select('*')
-            .eq('setting_key', 'website_status')
+            .eq('id', 1)
             .single();
 
-          if (!supaErr && supaData && supaData.setting_value) {
-            const rawVal = String(supaData.setting_value).toUpperCase();
-            const supaStatus: 'ON' | 'OFF' = rawVal === 'OFF' || rawVal === 'OFFLINE' ? 'OFF' : 'ON';
-
-            if (currentSettings) {
-              currentSettings = { ...currentSettings, website_status: supaStatus };
-            } else {
-              currentSettings = {
-                id: 1,
-                site_name: 'Jasdorbydy',
-                logo_url: '/logo-store.png',
-                theme_color: '#b84d6b',
-                wa_group_url: 'https://chat.whatsapp.com/LOuCM1OUNNBEbuq894AJ0Q?s=cl&p=a&ilr=4',
-                wa_admin_number: '6285124356993',
-                testimonial_url: '#testimonials',
-                website_status: supaStatus,
-                order_status: 'ON',
-                closed_title: 'LAGI ISTIRAHAT DULU',
-                closed_desc: 'Pesanan sedang ditutup sementara. Silakan kembali lagi nanti.',
-                closed_button_text: 'Chat Admin',
-              };
-            }
+          if (supaSet) {
+            currentSettings = { ...currentSettings, ...supaSet };
           }
         } catch (supaFetchErr) {
-          console.warn('Could not fetch initial site_settings from Supabase:', supaFetchErr);
+          console.warn('Could not fetch website_settings directly from Supabase:', supaFetchErr);
         }
+      }
+
+      if (currentSettings) {
+        currentSettings.website_status = String(currentSettings.website_status).toUpperCase() === 'OFF' ? 'OFF' : 'ON';
+        currentSettings.order_status = String(currentSettings.order_status).toUpperCase() === 'OFF' ? 'OFF' : 'ON';
       }
 
       setSettings(currentSettings);
@@ -65,11 +50,26 @@ export function useRealtimeSettings() {
   useEffect(() => {
     fetchSettings();
 
-    // 3. Supabase Realtime Subscription for immediate cross-device sync
+    // 3. Supabase Realtime Subscriptions for website_settings and site_settings
     let channel: any = null;
     if (isSupabaseConfigured) {
       channel = supabase
-        .channel('realtime_site_settings')
+        .channel('realtime_website_settings')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'website_settings' },
+          (payload: any) => {
+            if (payload.new) {
+              const updatedWebStatus = String(payload.new.website_status || 'ON').toUpperCase() === 'OFF' ? 'OFF' : 'ON';
+              const updatedOrdStatus = String(payload.new.order_status || 'ON').toUpperCase() === 'OFF' ? 'OFF' : 'ON';
+              
+              setSettings((prev) => {
+                if (!prev) return { ...payload.new, website_status: updatedWebStatus, order_status: updatedOrdStatus };
+                return { ...prev, ...payload.new, website_status: updatedWebStatus, order_status: updatedOrdStatus };
+              });
+            }
+          }
+        )
         .on(
           'postgres_changes',
           { event: '*', schema: 'public', table: 'site_settings' },
@@ -77,16 +77,16 @@ export function useRealtimeSettings() {
             if (payload.new && payload.new.setting_key === 'website_status') {
               const rawVal = String(payload.new.setting_value).toUpperCase();
               const newStatus: 'ON' | 'OFF' = rawVal === 'OFF' || rawVal === 'OFFLINE' ? 'OFF' : 'ON';
-              
               setSettings((prev) => (prev ? { ...prev, website_status: newStatus } : prev));
+            }
+            if (payload.new && payload.new.setting_key === 'order_status') {
+              const rawVal = String(payload.new.setting_value).toUpperCase();
+              const newStatus: 'ON' | 'OFF' = rawVal === 'OFF' || rawVal === 'OFFLINE' ? 'OFF' : 'ON';
+              setSettings((prev) => (prev ? { ...prev, order_status: newStatus } : prev));
             }
           }
         )
-        .subscribe((status) => {
-          if (status === 'SUBSCRIBED') {
-            console.log('Successfully subscribed to Supabase Realtime site_settings updates');
-          }
-        });
+        .subscribe();
     }
 
     return () => {

@@ -181,7 +181,8 @@ export default function AdminDashboardPage() {
   // 1. Toggle Website Status (Immediate API + Supabase Sync)
   const handleToggleWebsiteStatus = async () => {
     if (!settings || isTogglingWebsite) return;
-    const nextStatus: 'ON' | 'OFF' = settings.website_status === 'ON' ? 'OFF' : 'ON';
+    const currentStatus = String(settings.website_status || 'ON').toUpperCase();
+    const nextStatus: 'ON' | 'OFF' = currentStatus === 'OFF' ? 'ON' : 'OFF';
     setIsTogglingWebsite(true);
     setSaveErrorMsg('');
 
@@ -194,28 +195,28 @@ export default function AdminDashboardPage() {
       });
 
       const data = await res.json();
-      if (data.success) {
-        setSettings(data.settings);
-        flashMessage(`Status Website berhasil diubah menjadi ${nextStatus}`);
-      } else {
+      if (!res.ok || !data.success) {
         throw new Error(data.error || 'Gagal update database server');
       }
+
+      setSettings(data.settings);
+      flashMessage(`Status Website berhasil diubah menjadi ${nextStatus}`);
 
       // Step B: Direct Supabase client sync if configured
       if (isSupabaseConfigured) {
         try {
           await supabase
+            .from('website_settings')
+            .upsert(
+              { ...data.settings, website_status: nextStatus, updated_at: new Date().toISOString() },
+              { onConflict: 'id' }
+            );
+
+          await supabase
             .from('site_settings')
             .upsert(
               { id: '1', setting_key: 'website_status', setting_value: nextStatus, updated_at: new Date().toISOString() },
               { onConflict: 'setting_key' }
-            );
-
-          await supabase
-            .from('website_settings')
-            .upsert(
-              { ...settings, website_status: nextStatus, updated_at: new Date().toISOString() },
-              { onConflict: 'id' }
             );
         } catch (supaErr) {
           console.warn('Direct Supabase client toggle update warning:', supaErr);
@@ -232,7 +233,8 @@ export default function AdminDashboardPage() {
   // 1b. Toggle Order Status (Immediate API + Supabase Sync)
   const handleToggleOrderStatus = async () => {
     if (!settings) return;
-    const nextStatus: 'ON' | 'OFF' = settings.order_status === 'ON' ? 'OFF' : 'ON';
+    const currentStatus = String(settings.order_status || 'ON').toUpperCase();
+    const nextStatus: 'ON' | 'OFF' = currentStatus === 'OFF' ? 'ON' : 'OFF';
     setSaveErrorMsg('');
 
     try {
@@ -243,11 +245,32 @@ export default function AdminDashboardPage() {
       });
 
       const data = await res.json();
-      if (data.success) {
-        setSettings(data.settings);
-        flashMessage(`Status Order berhasil diubah menjadi ${nextStatus}`);
-      } else {
+      if (!res.ok || !data.success) {
         throw new Error(data.error || 'Gagal update database server');
+      }
+
+      setSettings(data.settings);
+      flashMessage(`Status Order berhasil diubah menjadi ${nextStatus}`);
+
+      // Direct Supabase client sync if configured
+      if (isSupabaseConfigured) {
+        try {
+          await supabase
+            .from('website_settings')
+            .upsert(
+              { ...data.settings, order_status: nextStatus, updated_at: new Date().toISOString() },
+              { onConflict: 'id' }
+            );
+
+          await supabase
+            .from('site_settings')
+            .upsert(
+              { id: '2', setting_key: 'order_status', setting_value: nextStatus, updated_at: new Date().toISOString() },
+              { onConflict: 'setting_key' }
+            );
+        } catch (supaErr) {
+          console.warn('Direct Supabase client toggle update warning:', supaErr);
+        }
       }
     } catch (err: any) {
       console.error('Error toggling order status:', err);
@@ -549,7 +572,7 @@ export default function AdminDashboardPage() {
                     className={`w-full py-2.5 px-3 rounded-lg text-xs font-black flex items-center justify-center gap-2 transition ${
                       isTogglingWebsite ? 'opacity-70 cursor-wait' : ''
                     } ${
-                      settings.website_status === 'ON'
+                      String(settings.website_status).toUpperCase() === 'ON'
                         ? 'bg-emerald-600 text-white shadow-xs'
                         : 'bg-rose-600 text-white shadow-xs'
                     }`}
@@ -558,7 +581,7 @@ export default function AdminDashboardPage() {
                     <span>
                       {isTogglingWebsite
                         ? 'MEMPROSES...'
-                        : settings.website_status === 'ON'
+                        : String(settings.website_status).toUpperCase() === 'ON'
                         ? '🟢 WEBSITE ON'
                         : '🔴 WEBSITE OFF'}
                     </span>
@@ -571,13 +594,17 @@ export default function AdminDashboardPage() {
                     type="button"
                     onClick={handleToggleOrderStatus}
                     className={`w-full py-2.5 px-3 rounded-lg text-xs font-black flex items-center justify-center gap-2 transition ${
-                      settings.order_status === 'ON'
+                      String(settings.order_status).toUpperCase() === 'ON'
                         ? 'bg-emerald-600 text-white shadow-xs'
                         : 'bg-rose-600 text-white shadow-xs'
                     }`}
                   >
                     <Power className="w-4 h-4" />
-                    <span>☕ ORDER {settings.order_status}</span>
+                    <span>
+                      {String(settings.order_status).toUpperCase() === 'ON'
+                        ? '☕ ORDER ON'
+                        : '🔴 ORDER OFF'}
+                    </span>
                   </button>
                 </div>
               </div>

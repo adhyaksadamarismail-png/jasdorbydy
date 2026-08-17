@@ -82,12 +82,15 @@ export default function CheckoutPage() {
   }
 
   // Priority check: Website OFF
-  if (settings && settings.website_status === 'OFF') {
+  if (settings && String(settings.website_status).toUpperCase() === 'OFF') {
     return <ClosedPage settings={settings} />;
   }
 
   // Priority check: Order OFF or Brand OFF
-  if ((settings && settings.order_status === 'OFF') || (brand && brand.status === 'OFF')) {
+  const isWebsiteOrderOff = settings ? String(settings.order_status).toUpperCase() === 'OFF' : false;
+  const isBrandOff = brand ? String(brand.status).toUpperCase() === 'OFF' : false;
+
+  if (isWebsiteOrderOff || isBrandOff) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
         <div className="soft-card-cute p-6 w-full max-w-xs flex flex-col items-center">
@@ -130,8 +133,13 @@ export default function CheckoutPage() {
     e.preventDefault();
     setErrorMessage('');
 
-    if (settings && settings.website_status === 'OFF') {
+    if (settings && String(settings.website_status).toUpperCase() === 'OFF') {
       setErrorMessage('Website sedang ditutup. Pesanan tidak dapat diproses.');
+      return;
+    }
+
+    if (settings && String(settings.order_status).toUpperCase() === 'OFF') {
+      setErrorMessage('Layanan order sedang ditutup sementara.');
       return;
     }
 
