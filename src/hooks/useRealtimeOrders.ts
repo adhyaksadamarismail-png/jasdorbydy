@@ -11,25 +11,28 @@ export function useRealtimeOrders() {
 
   const fetchOrders = useCallback(async () => {
     try {
-      if (isSupabaseConfigured) {
-        const { data, error: supaErr } = await supabase
-          .from('orders')
-          .select('*')
-          .order('created_at', { ascending: false });
+      // 1. Fetch from local API endpoint
+      const res = await fetch('/api/orders');
+      const json = await res.json();
+      let fetchedOrders: Order[] = json.success ? json.orders : [];
 
-        if (!supaErr && data && data.length > 0) {
-          setOrders(data as Order[]);
-          setLoading(false);
-          return;
+      // 2. Overlay from Supabase if configured and available
+      if (isSupabaseConfigured) {
+        try {
+          const { data, error: supaErr } = await supabase
+            .from('orders')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          if (!supaErr && data && data.length > 0) {
+            fetchedOrders = data as Order[];
+          }
+        } catch (supaErr) {
+          console.warn('Could not fetch orders directly from Supabase:', supaErr);
         }
       }
 
-      // Fallback to API endpoint
-      const res = await fetch('/api/orders');
-      const json = await res.json();
-      if (json.success) {
-        setOrders(json.orders);
-      }
+      setOrders(fetchedOrders);
     } catch (err: any) {
       console.error('Failed to fetch orders:', err);
       setError('Gagal memuat data pesanan.');
@@ -70,7 +73,9 @@ export function useRealtimeOrders() {
     }
 
     return () => {
-      if (channel) supabase.removeChannel(channel);
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
     };
   }, [fetchOrders]);
 

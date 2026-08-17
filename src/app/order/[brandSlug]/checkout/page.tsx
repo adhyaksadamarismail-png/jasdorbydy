@@ -30,6 +30,7 @@ export default function CheckoutPage() {
 
   // Error validation states
   const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     // Restore Cart from sessionStorage
@@ -215,9 +216,9 @@ Total : Rp${totalCartPrice.toLocaleString('id-ID')}
 
 Mohon konfirmasinya terimakasih`;
 
-    // Save Order to SQLite DB
+    setIsSubmitting(true);
     try {
-      await fetch('/api/orders', {
+      const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -226,23 +227,30 @@ Mohon konfirmasinya terimakasih`;
           outlet_name: outletName.trim(),
           pickup_type: pickupType,
           pickup_time_info: pickupInfo,
+          items: cart,
           items_json: JSON.stringify(cart),
           total_price: totalCartPrice,
         }),
       });
-    } catch (e) {
-      console.error('Failed saving order log:', e);
+
+      const resData = await res.json();
+      if (!res.ok || !resData.success) {
+        throw new Error(resData.error || 'Gagal menyimpan pesanan ke database.');
+      }
+
+      // Clear cart ONLY AFTER SUCCESSFUL Persistence
+      sessionStorage.removeItem(`jasdor_cart_${brandSlug}`);
+
+      // Open WhatsApp
+      const adminNumber = settings && settings.wa_admin_number ? settings.wa_admin_number.replace(/[^0-9]/g, '') : '6285124356993';
+      const waUrl = `https://wa.me/${adminNumber}?text=${encodeURIComponent(waText)}`;
+      window.location.href = waUrl;
+    } catch (e: any) {
+      console.error('Failed saving order:', e);
+      setErrorMessage(`Gagal memproses pesanan: ${e.message || 'Silakan coba lagi.'}`);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // Open WhatsApp
-    const adminNumber = settings && settings.wa_admin_number ? settings.wa_admin_number.replace(/[^0-9]/g, '') : '6285124356993';
-    const waUrl = `https://wa.me/${adminNumber}?text=${encodeURIComponent(waText)}`;
-
-    // Clear cart
-    sessionStorage.removeItem(`jasdor_cart_${brandSlug}`);
-
-    // Redirect to WhatsApp
-    window.location.href = waUrl;
   };
 
   return (
@@ -491,15 +499,17 @@ Mohon konfirmasinya terimakasih`;
         <div className="pt-2">
           <button
             type="submit"
-            disabled={!isValidMinOrder}
+            disabled={!isValidMinOrder || isSubmitting}
             className={`w-full py-3.5 px-4 rounded-2xl text-xs font-black shadow-md flex items-center justify-center gap-2 transition ${
-              isValidMinOrder
+              isSubmitting
+                ? 'bg-pink-400 text-white cursor-wait opacity-80'
+                : isValidMinOrder
                 ? 'bg-[#e84393] hover:bg-[#d63031] text-white active:scale-[0.99]'
                 : 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-75'
             }`}
           >
-            <Send className="w-4 h-4" />
-            <span>Konfirmasi via WhatsApp</span>
+            <Send className={`w-4 h-4 ${isSubmitting ? 'animate-spin' : ''}`} />
+            <span>{isSubmitting ? 'MEMPROSES ORDER...' : 'Konfirmasi via WhatsApp'}</span>
           </button>
         </div>
       </form>
