@@ -178,7 +178,7 @@ export default function AdminDashboardPage() {
     setTimeout(() => setSaveErrorMsg(''), 5000);
   };
 
-  // 1. Toggle Website Status (Immediate Supabase + Server Sync with error safety)
+  // 1. Toggle Website Status (Immediate API + Supabase Sync)
   const handleToggleWebsiteStatus = async () => {
     if (!settings || isTogglingWebsite) return;
     const nextStatus: 'ON' | 'OFF' = settings.website_status === 'ON' ? 'OFF' : 'ON';
@@ -186,21 +186,7 @@ export default function AdminDashboardPage() {
     setSaveErrorMsg('');
 
     try {
-      // Step A: Update Supabase site_settings if configured
-      if (isSupabaseConfigured) {
-        const { error: supaErr } = await supabase
-          .from('site_settings')
-          .upsert(
-            { id: '1', setting_key: 'website_status', setting_value: nextStatus, updated_at: new Date().toISOString() },
-            { onConflict: 'setting_key' }
-          );
-
-        if (supaErr) {
-          throw new Error(`Gagal update Supabase: ${supaErr.message}`);
-        }
-      }
-
-      // Step B: Update local API DB
+      // Step A: Update local API (which also syncs to Supabase on server)
       const res = await fetch('/api/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -208,17 +194,64 @@ export default function AdminDashboardPage() {
       });
 
       const data = await res.json();
-      if (!data.success) {
+      if (data.success) {
+        setSettings(data.settings);
+        flashMessage(`Status Website berhasil diubah menjadi ${nextStatus}`);
+      } else {
         throw new Error(data.error || 'Gagal update database server');
       }
 
-      setSettings(data.settings);
-      flashMessage(`Status Website berhasil diubah menjadi ${nextStatus}`);
+      // Step B: Direct Supabase client sync if configured
+      if (isSupabaseConfigured) {
+        try {
+          await supabase
+            .from('site_settings')
+            .upsert(
+              { id: '1', setting_key: 'website_status', setting_value: nextStatus, updated_at: new Date().toISOString() },
+              { onConflict: 'setting_key' }
+            );
+
+          await supabase
+            .from('website_settings')
+            .upsert(
+              { ...settings, website_status: nextStatus, updated_at: new Date().toISOString() },
+              { onConflict: 'id' }
+            );
+        } catch (supaErr) {
+          console.warn('Direct Supabase client toggle update warning:', supaErr);
+        }
+      }
     } catch (err: any) {
       console.error('Error toggling website status:', err);
       flashError(err.message || 'Gagal mengubah status website. Coba lagi.');
     } finally {
       setIsTogglingWebsite(false);
+    }
+  };
+
+  // 1b. Toggle Order Status (Immediate API + Supabase Sync)
+  const handleToggleOrderStatus = async () => {
+    if (!settings) return;
+    const nextStatus: 'ON' | 'OFF' = settings.order_status === 'ON' ? 'OFF' : 'ON';
+    setSaveErrorMsg('');
+
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...settings, order_status: nextStatus }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setSettings(data.settings);
+        flashMessage(`Status Order berhasil diubah menjadi ${nextStatus}`);
+      } else {
+        throw new Error(data.error || 'Gagal update database server');
+      }
+    } catch (err: any) {
+      console.error('Error toggling order status:', err);
+      flashError(err.message || 'Gagal mengubah status order.');
     }
   };
 
@@ -229,21 +262,6 @@ export default function AdminDashboardPage() {
     setSaveErrorMsg('');
 
     try {
-      // Step A: Update Supabase if configured
-      if (isSupabaseConfigured) {
-        const { error: supaErr } = await supabase
-          .from('site_settings')
-          .upsert(
-            { id: '1', setting_key: 'website_status', setting_value: settings.website_status, updated_at: new Date().toISOString() },
-            { onConflict: 'setting_key' }
-          );
-
-        if (supaErr) {
-          throw new Error(`Gagal update Supabase: ${supaErr.message}`);
-        }
-      }
-
-      // Step B: Save to API
       const res = await fetch('/api/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -262,7 +280,7 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // 2. Toggle Brand status
+  // 3. Toggle Brand status
   const handleToggleBrandStatus = async (brand: Brand) => {
     const nextStatus = brand.status === 'ON' ? 'OFF' : 'ON';
     try {
@@ -281,7 +299,7 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // 3. Add New Brand
+  // 4. Add New Brand
   const handleAddBrand = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newBrandName.trim() || !newBrandSlug.trim()) return;
@@ -309,7 +327,25 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // 4. Save/Edit Outlet
+  // 5. Toggle Outlet Status & Save/Delete Outlet
+  const handleToggleOutletStatus = async (outlet: Outlet) => {
+    const nextStatus = outlet.status === 'ON' ? 'OFF' : 'ON';
+    try {
+      const res = await fetch('/api/outlets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...outlet, status: nextStatus }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setOutlets(data.outlets);
+        flashMessage(`Status outlet ${outlet.outlet_name} diubah ke ${nextStatus}`);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleSaveOutlet = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingOutlet || !editingOutlet.outlet_name) return;
@@ -361,6 +397,25 @@ export default function AdminDashboardPage() {
         setProducts(data.products);
         setEditingProduct(null);
         flashMessage('Produk berhasil disimpan!');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // 6. Toggle Product Availability Status
+  const handleToggleProductAvailability = async (product: Product) => {
+    const nextStatus = product.availability === 'ON' ? 'OFF' : 'ON';
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...product, availability: nextStatus }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setProducts(data.products);
+        flashMessage(`Status produk ${product.name} diubah ke ${nextStatus}`);
       }
     } catch (e) {
       console.error(e);
@@ -514,12 +569,7 @@ export default function AdminDashboardPage() {
                   <label className="block text-xs font-bold text-gray-700 mb-2">Status Order</label>
                   <button
                     type="button"
-                    onClick={() =>
-                      setSettings({
-                        ...settings,
-                        order_status: settings.order_status === 'ON' ? 'OFF' : 'ON',
-                      })
-                    }
+                    onClick={handleToggleOrderStatus}
                     className={`w-full py-2.5 px-3 rounded-lg text-xs font-black flex items-center justify-center gap-2 transition ${
                       settings.order_status === 'ON'
                         ? 'bg-emerald-600 text-white shadow-xs'
@@ -827,6 +877,17 @@ export default function AdminDashboardPage() {
 
                     <div className="flex items-center gap-2">
                       <button
+                        onClick={() => handleToggleOutletStatus(out)}
+                        className={`px-2.5 py-1.5 rounded-lg text-xs font-black flex items-center gap-1 transition ${
+                          out.status === 'ON'
+                            ? 'bg-emerald-600 text-white shadow-xs'
+                            : 'bg-rose-600 text-white shadow-xs'
+                        }`}
+                      >
+                        <Power className="w-3 h-3" />
+                        <span>{out.status === 'ON' ? 'ON' : 'OFF'}</span>
+                      </button>
+                      <button
                         onClick={() => setEditingOutlet(out)}
                         className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100"
                       >
@@ -1034,6 +1095,17 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleToggleProductAvailability(prod)}
+                        className={`px-2.5 py-1.5 rounded-lg text-xs font-black flex items-center gap-1 transition ${
+                          prod.availability === 'ON'
+                            ? 'bg-emerald-600 text-white shadow-xs'
+                            : 'bg-rose-600 text-white shadow-xs'
+                        }`}
+                      >
+                        <Power className="w-3 h-3" />
+                        <span>{prod.availability === 'ON' ? 'ON' : 'OFF'}</span>
+                      </button>
                       <button
                         onClick={() => setEditingProduct(prod)}
                         className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100"
