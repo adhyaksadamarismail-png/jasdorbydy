@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { WebsiteSettings } from '@/types';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured, safeSupabaseQuery } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,14 +37,15 @@ export async function GET() {
       }
     } catch (e) {}
 
-    // Try reading site_settings key-value pairs from Supabase if configured
+    // Safely try reading site_settings key-value pairs from Supabase if configured & reachable
     if (isSupabaseConfigured) {
       try {
-        const { data: supaRows, error: supaErr } = await supabase
-          .from('site_settings')
-          .select('*');
+        const supaRes: any = await safeSupabaseQuery(
+          supabase.from('site_settings').select('*')
+        );
 
-        if (!supaErr && supaRows && supaRows.length > 0) {
+        if (supaRes && supaRes.data && supaRes.data.length > 0) {
+          const supaRows = supaRes.data;
           const webRow = supaRows.find((r: any) => r.setting_key === 'website_status');
           const ordRow = supaRows.find((r: any) => r.setting_key === 'order_status');
 
@@ -156,30 +157,22 @@ export async function POST(req: Request) {
       closed_button_text,
     };
 
-    // 3. Sync to Supabase site_settings table by setting_key
+    // 3. Safely sync to Supabase site_settings table by setting_key
     if (isSupabaseConfigured) {
       try {
-        const { data: webData, error: webErr } = await supabase
-          .from('site_settings')
-          .upsert(
+        safeSupabaseQuery(
+          supabase.from('site_settings').upsert(
             { id: '1', setting_key: 'website_status', setting_value: website_status, updated_at: new Date().toISOString() },
             { onConflict: 'setting_key' }
           )
-          .select()
-          .single();
+        );
 
-        console.log('[ADMIN SUPABASE UPDATE website_status]', { setting_key: 'website_status', value: website_status, result: webData, error: webErr });
-
-        const { data: ordData, error: ordErr } = await supabase
-          .from('site_settings')
-          .upsert(
+        safeSupabaseQuery(
+          supabase.from('site_settings').upsert(
             { id: '2', setting_key: 'order_status', setting_value: order_status, updated_at: new Date().toISOString() },
             { onConflict: 'setting_key' }
           )
-          .select()
-          .single();
-
-        console.log('[ADMIN SUPABASE UPDATE order_status]', { setting_key: 'order_status', value: order_status, result: ordData, error: ordErr });
+        );
       } catch (supaErr) {
         console.error('[ADMIN SUPABASE UPDATE ERROR]', supaErr);
       }

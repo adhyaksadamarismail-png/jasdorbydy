@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { WebsiteSettings } from '@/types';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured, safeSupabaseQuery } from '@/lib/supabase';
 
 export function useRealtimeSettings() {
   const [settings, setSettings] = useState<WebsiteSettings | null>(null);
@@ -29,14 +29,15 @@ export function useRealtimeSettings() {
         closed_button_text: 'Chat Admin',
       };
 
-      // 2. Fetch site_settings from Supabase (Single Source of Truth)
+      // 2. Safely fetch site_settings from Supabase if configured & reachable
       if (isSupabaseConfigured) {
         try {
-          const { data: supaRows, error: supaErr } = await supabase
-            .from('site_settings')
-            .select('*');
+          const supaRes: any = await safeSupabaseQuery(
+            supabase.from('site_settings').select('*')
+          );
 
-          if (!supaErr && supaRows && supaRows.length > 0) {
+          if (supaRes && supaRes.data && supaRes.data.length > 0) {
+            const supaRows = supaRes.data;
             const webRow = supaRows.find((r: any) => r.setting_key === 'website_status');
             const ordRow = supaRows.find((r: any) => r.setting_key === 'order_status');
 
@@ -55,11 +56,6 @@ export function useRealtimeSettings() {
       // Ensure normalized values
       currentSettings.website_status = String(currentSettings.website_status || 'ON').toUpperCase() === 'OFF' ? 'OFF' : 'ON';
       currentSettings.order_status = String(currentSettings.order_status || 'ON').toUpperCase() === 'OFF' ? 'OFF' : 'ON';
-
-      console.log('[CUSTOMER INITIAL SETTINGS FETCHED]', {
-        website_status: currentSettings.website_status,
-        order_status: currentSettings.order_status,
-      });
 
       setSettings(currentSettings);
     } catch (err: any) {
@@ -82,12 +78,6 @@ export function useRealtimeSettings() {
           'postgres_changes',
           { event: '*', schema: 'public', table: 'site_settings' },
           (payload: any) => {
-            console.log('[CUSTOMER REALTIME EVENT RECEIVED]', {
-              eventType: payload.eventType,
-              setting_key: payload.new?.setting_key,
-              setting_value: payload.new?.setting_value,
-            });
-
             if (payload.new && payload.new.setting_key) {
               const key = payload.new.setting_key;
               const val = String(payload.new.setting_value || 'ON').toUpperCase() === 'OFF' ? 'OFF' : 'ON';
@@ -110,22 +100,12 @@ export function useRealtimeSettings() {
                 const updated = { ...base };
                 if (key === 'website_status') updated.website_status = val;
                 if (key === 'order_status') updated.order_status = val;
-
-                console.log('[CUSTOMER REALTIME STATE UPDATED]', {
-                  website_status: updated.website_status,
-                  order_status: updated.order_status,
-                });
-
                 return updated;
               });
             }
           }
         )
-        .subscribe((status) => {
-          if (status === 'SUBSCRIBED') {
-            console.log('Successfully subscribed to Supabase Realtime site_settings for Customer');
-          }
-        });
+        .subscribe();
     }
 
     // 4. Polling fallback (every 2 seconds) to ensure instant UI sync across local DB / fallback mode
