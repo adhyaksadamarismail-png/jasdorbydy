@@ -21,6 +21,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { WebsiteSettings, Brand, Outlet, Product, Order } from '@/types';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -34,6 +35,8 @@ export default function AdminDashboardPage() {
 
   const [loading, setLoading] = useState(true);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
+  const [saveErrorMsg, setSaveErrorMsg] = useState('');
+  const [isTogglingWebsite, setIsTogglingWebsite] = useState(false);
 
   // Editing forms state
   const [newBrandName, setNewBrandName] = useState('');
@@ -78,19 +81,108 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     loadAllAdminData();
+
+    // Supabase Realtime listener for site_settings
+    let channel: any = null;
+    if (isSupabaseConfigured) {
+      channel = supabase
+        .channel('admin_site_settings')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'site_settings' },
+          (payload: any) => {
+            if (payload.new && payload.new.setting_key === 'website_status') {
+              const rawVal = String(payload.new.setting_value).toUpperCase();
+              const newStatus: 'ON' | 'OFF' = rawVal === 'OFF' || rawVal === 'OFFLINE' ? 'OFF' : 'ON';
+              setSettings((prev) => (prev ? { ...prev, website_status: newStatus } : prev));
+            }
+          }
+        )
+        .subscribe();
+    }
+
+    return () => {
+      if (channel) supabase.removeChannel(channel);
+    };
   }, []);
 
   const flashMessage = (msg: string) => {
     setSaveSuccessMsg(msg);
-    setTimeout(() => setSaveSuccessMsg(''), 3000);
+    setSaveErrorMsg('');
+    setTimeout(() => setSaveSuccessMsg(''), 4000);
   };
 
-  // 1. Save Settings
+  const flashError = (msg: string) => {
+    setSaveErrorMsg(msg);
+    setTimeout(() => setSaveErrorMsg(''), 5000);
+  };
+
+  // 1. Toggle Website Status (Immediate Supabase + Server Sync with error safety)
+  const handleToggleWebsiteStatus = async () => {
+    if (!settings || isTogglingWebsite) return;
+    const nextStatus: 'ON' | 'OFF' = settings.website_status === 'ON' ? 'OFF' : 'ON';
+    setIsTogglingWebsite(true);
+    setSaveErrorMsg('');
+
+    try {
+      // Step A: Update Supabase site_settings if configured
+      if (isSupabaseConfigured) {
+        const { error: supaErr } = await supabase
+          .from('site_settings')
+          .upsert(
+            { id: '1', setting_key: 'website_status', setting_value: nextStatus, updated_at: new Date().toISOString() },
+            { onConflict: 'setting_key' }
+          );
+
+        if (supaErr) {
+          throw new Error(`Gagal update Supabase: ${supaErr.message}`);
+        }
+      }
+
+      // Step B: Update local API DB
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...settings, website_status: nextStatus }),
+      });
+
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(data.error || 'Gagal update database server');
+      }
+
+      setSettings(data.settings);
+      flashMessage(`Status Website berhasil diubah menjadi ${nextStatus}`);
+    } catch (err: any) {
+      console.error('Error toggling website status:', err);
+      flashError(err.message || 'Gagal mengubah status website. Coba lagi.');
+    } finally {
+      setIsTogglingWebsite(false);
+    }
+  };
+
+  // 2. Save All Settings Form
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!settings) return;
+    setSaveErrorMsg('');
 
     try {
+      // Step A: Update Supabase if configured
+      if (isSupabaseConfigured) {
+        const { error: supaErr } = await supabase
+          .from('site_settings')
+          .upsert(
+            { id: '1', setting_key: 'website_status', setting_value: settings.website_status, updated_at: new Date().toISOString() },
+            { onConflict: 'setting_key' }
+          );
+
+        if (supaErr) {
+          throw new Error(`Gagal update Supabase: ${supaErr.message}`);
+        }
+      }
+
+      // Step B: Save to API
       const res = await fetch('/api/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -100,9 +192,12 @@ export default function AdminDashboardPage() {
       if (data.success) {
         setSettings(data.settings);
         flashMessage('Pengaturan website berhasil disimpan!');
+      } else {
+        throw new Error(data.error || 'Gagal menyimpan pengaturan');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      flashError(err.message || 'Gagal menyimpan pengaturan.');
     }
   };
 
@@ -309,6 +404,14 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
+      {/* Save Error Alert Banner */}
+      {saveErrorMsg && (
+        <div className="mx-4 mt-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold text-center flex items-center justify-center gap-2">
+          <XCircle className="w-4 h-4 text-rose-600" />
+          <span>{saveErrorMsg}</span>
+        </div>
+      )}
+
       {/* TAB CONTENT AREA */}
       <div className="p-4 flex-1">
         {/* -------------------- TAB 1: SETTINGS -------------------- */}
@@ -325,20 +428,24 @@ export default function AdminDashboardPage() {
                   <label className="block text-xs font-bold text-gray-700 mb-2">Status Website</label>
                   <button
                     type="button"
-                    onClick={() =>
-                      setSettings({
-                        ...settings,
-                        website_status: settings.website_status === 'ON' ? 'OFF' : 'ON',
-                      })
-                    }
+                    disabled={isTogglingWebsite}
+                    onClick={handleToggleWebsiteStatus}
                     className={`w-full py-2.5 px-3 rounded-lg text-xs font-black flex items-center justify-center gap-2 transition ${
+                      isTogglingWebsite ? 'opacity-70 cursor-wait' : ''
+                    } ${
                       settings.website_status === 'ON'
                         ? 'bg-emerald-600 text-white shadow-xs'
                         : 'bg-rose-600 text-white shadow-xs'
                     }`}
                   >
-                    <Power className="w-4 h-4" />
-                    <span>🟢 WEBSITE {settings.website_status}</span>
+                    <Power className={`w-4 h-4 ${isTogglingWebsite ? 'animate-spin' : ''}`} />
+                    <span>
+                      {isTogglingWebsite
+                        ? 'MEMPROSES...'
+                        : settings.website_status === 'ON'
+                        ? '🟢 WEBSITE ON'
+                        : '🔴 WEBSITE OFF'}
+                    </span>
                   </button>
                 </div>
 

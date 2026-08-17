@@ -8,15 +8,17 @@ import { Product, Brand, WebsiteSettings, CartItem } from '@/types';
 import ClosedPage from '@/components/ClosedPage';
 import ProductDetailModal from '@/components/ProductDetailModal';
 
+import { useRealtimeSettings } from '@/hooks/useRealtimeSettings';
+
 export default function MenuPage() {
   const urlParams = useParams();
   const brandSlug = (urlParams?.brandSlug as string) || 'kopi-kenangan';
   const router = useRouter();
 
+  const { settings, loading: settingsLoading } = useRealtimeSettings();
   const [products, setProducts] = useState<Product[]>([]);
   const [brand, setBrand] = useState<Brand | null>(null);
-  const [settings, setSettings] = useState<WebsiteSettings | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingData, setLoadingData] = useState(true);
 
   // Tab State: 'reguler' | 'satuan'
   const [activeTabType, setActiveTabType] = useState<'reguler' | 'satuan'>('reguler');
@@ -52,18 +54,15 @@ export default function MenuPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const [resProducts, resBrands, resSettings] = await Promise.all([
+        const [resProducts, resBrands] = await Promise.all([
           fetch(`/api/products?brandSlug=${brandSlug}`),
           fetch('/api/brands'),
-          fetch('/api/settings'),
         ]);
 
         const dataProducts = await resProducts.json();
         const dataBrands = await resBrands.json();
-        const dataSettings = await resSettings.json();
 
         if (dataProducts.success) setProducts(dataProducts.products);
-        if (dataSettings.success) setSettings(dataSettings.settings);
         if (dataBrands.success) {
           const matchedBrand = dataBrands.brands.find((b: Brand) => b.slug === brandSlug);
           if (matchedBrand) setBrand(matchedBrand);
@@ -79,11 +78,13 @@ export default function MenuPage() {
       } catch (err) {
         console.error('Failed loading menu data:', err);
       } finally {
-        setLoading(false);
+        setLoadingData(false);
       }
     }
     loadData();
   }, [brandSlug]);
+
+  const loading = settingsLoading || loadingData;
 
   const saveCartToStorage = (updatedCart: CartItem[]) => {
     setCart(updatedCart);

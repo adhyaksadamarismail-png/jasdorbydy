@@ -8,15 +8,17 @@ import { ArrowLeft, MapPin, ChevronRight, Store, Search, X, Check, ArrowRight, A
 import { Outlet, Brand, WebsiteSettings } from '@/types';
 import ClosedPage from '@/components/ClosedPage';
 
+import { useRealtimeSettings } from '@/hooks/useRealtimeSettings';
+
 export default function SelectOutletPage() {
   const urlParams = useParams();
   const brandSlug = (urlParams?.brandSlug as string) || 'kopi-kenangan';
   const router = useRouter();
 
+  const { settings, loading: settingsLoading } = useRealtimeSettings();
   const [outlets, setOutlets] = useState<Outlet[]>([]);
   const [brand, setBrand] = useState<Brand | null>(null);
-  const [settings, setSettings] = useState<WebsiteSettings | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingData, setLoadingData] = useState(true);
 
   // Search & Geolocation state
   const [searchQuery, setSearchQuery] = useState('');
@@ -29,18 +31,15 @@ export default function SelectOutletPage() {
   useEffect(() => {
     async function loadOutletData() {
       try {
-        const [resOutlets, resBrands, resSettings] = await Promise.all([
+        const [resOutlets, resBrands] = await Promise.all([
           fetch(`/api/outlets?brandSlug=${brandSlug}`),
           fetch('/api/brands'),
-          fetch('/api/settings'),
         ]);
 
         const dataOutlets = await resOutlets.json();
         const dataBrands = await resBrands.json();
-        const dataSettings = await resSettings.json();
 
         if (dataOutlets.success) setOutlets(dataOutlets.outlets);
-        if (dataSettings.success) setSettings(dataSettings.settings);
         if (dataBrands.success) {
           const matchedBrand = dataBrands.brands.find((b: Brand) => b.slug === brandSlug);
           if (matchedBrand) setBrand(matchedBrand);
@@ -48,11 +47,13 @@ export default function SelectOutletPage() {
       } catch (err) {
         console.error('Failed loading outlet data:', err);
       } finally {
-        setLoading(false);
+        setLoadingData(false);
       }
     }
     loadOutletData();
   }, [brandSlug]);
+
+  const loading = settingsLoading || loadingData;
 
   if (loading) {
     return (

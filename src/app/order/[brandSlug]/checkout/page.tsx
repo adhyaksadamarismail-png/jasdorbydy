@@ -7,15 +7,17 @@ import { ArrowLeft, ShoppingBag, Send, Clock, User, AlertCircle, Trash2, Plus, M
 import { CartItem, Brand, WebsiteSettings } from '@/types';
 import ClosedPage from '@/components/ClosedPage';
 
+import { useRealtimeSettings } from '@/hooks/useRealtimeSettings';
+
 export default function CheckoutPage() {
   const urlParams = useParams();
   const brandSlug = (urlParams?.brandSlug as string) || 'kopi-kenangan';
   const router = useRouter();
 
+  const { settings, loading: settingsLoading } = useRealtimeSettings();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [brand, setBrand] = useState<Brand | null>(null);
-  const [settings, setSettings] = useState<WebsiteSettings | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingData, setLoadingData] = useState(true);
 
   // Form Fields
   const [customerName, setCustomerName] = useState('');
@@ -29,15 +31,9 @@ export default function CheckoutPage() {
   useEffect(() => {
     async function loadCheckoutData() {
       try {
-        const [resBrands, resSettings] = await Promise.all([
-          fetch('/api/brands'),
-          fetch('/api/settings'),
-        ]);
-
+        const resBrands = await fetch('/api/brands');
         const dataBrands = await resBrands.json();
-        const dataSettings = await resSettings.json();
 
-        if (dataSettings.success) setSettings(dataSettings.settings);
         if (dataBrands.success) {
           const matchedBrand = dataBrands.brands.find((b: Brand) => b.slug === brandSlug);
           if (matchedBrand) setBrand(matchedBrand);
@@ -53,11 +49,13 @@ export default function CheckoutPage() {
       } catch (err) {
         console.error('Failed loading checkout:', err);
       } finally {
-        setLoading(false);
+        setLoadingData(false);
       }
     }
     loadCheckoutData();
   }, [brandSlug]);
+
+  const loading = settingsLoading || loadingData;
 
   const saveCartToStorage = (updatedCart: CartItem[]) => {
     setCart(updatedCart);
@@ -144,6 +142,11 @@ export default function CheckoutPage() {
   const handleConfirmOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
+
+    if (settings && settings.website_status === 'OFF') {
+      setErrorMessage('Website sedang ditutup. Pesanan tidak dapat diproses.');
+      return;
+    }
 
     if (!customerName.trim()) {
       setErrorMessage('Mohon isi Nama Pemesan.');

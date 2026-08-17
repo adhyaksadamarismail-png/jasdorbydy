@@ -10,33 +10,30 @@ import TestimonialModal from '@/components/TestimonialModal';
 import HeaderNav from '@/components/HeaderNav';
 import Footer from '@/components/Footer';
 
+import { useRealtimeSettings } from '@/hooks/useRealtimeSettings';
+
 export default function Homepage() {
-  const [settings, setSettings] = useState<WebsiteSettings | null>(null);
+  const { settings, loading: settingsLoading } = useRealtimeSettings();
   const [brands, setBrands] = useState<Brand[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingBrands, setLoadingBrands] = useState(true);
   const [isTestiOpen, setIsTestiOpen] = useState(false);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchBrands() {
       try {
-        const [resSettings, resBrands] = await Promise.all([
-          fetch('/api/settings'),
-          fetch('/api/brands'),
-        ]);
-
-        const dataSettings = await resSettings.json();
+        const resBrands = await fetch('/api/brands');
         const dataBrands = await resBrands.json();
-
-        if (dataSettings.success) setSettings(dataSettings.settings);
         if (dataBrands.success) setBrands(dataBrands.brands);
       } catch (err) {
-        console.error('Failed to load data', err);
+        console.error('Failed to load brands', err);
       } finally {
-        setLoading(false);
+        setLoadingBrands(false);
       }
     }
-    fetchData();
+    fetchBrands();
   }, []);
+
+  const loading = settingsLoading || loadingBrands;
 
   if (loading) {
     return (
