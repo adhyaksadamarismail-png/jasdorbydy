@@ -56,7 +56,7 @@ export function useRealtimeSettings() {
       currentSettings.website_status = String(currentSettings.website_status || 'ON').toUpperCase() === 'OFF' ? 'OFF' : 'ON';
       currentSettings.order_status = String(currentSettings.order_status || 'ON').toUpperCase() === 'OFF' ? 'OFF' : 'ON';
 
-      console.log('[CUSTOMER SETTINGS INITIAL FETCH]', {
+      console.log('[CUSTOMER INITIAL SETTINGS FETCHED]', {
         website_status: currentSettings.website_status,
         order_status: currentSettings.order_status,
       });
@@ -77,12 +77,12 @@ export function useRealtimeSettings() {
     let channel: any = null;
     if (isSupabaseConfigured) {
       channel = supabase
-        .channel('realtime_site_settings')
+        .channel('realtime_site_settings_customer')
         .on(
           'postgres_changes',
           { event: '*', schema: 'public', table: 'site_settings' },
           (payload: any) => {
-            console.log('[REALTIME EVENT RECEIVED]', {
+            console.log('[CUSTOMER REALTIME EVENT RECEIVED]', {
               eventType: payload.eventType,
               setting_key: payload.new?.setting_key,
               setting_value: payload.new?.setting_value,
@@ -93,12 +93,25 @@ export function useRealtimeSettings() {
               const val = String(payload.new.setting_value || 'ON').toUpperCase() === 'OFF' ? 'OFF' : 'ON';
 
               setSettings((prev) => {
-                if (!prev) return prev;
-                const updated = { ...prev };
+                const base = prev || {
+                  id: 1,
+                  site_name: 'Jasdorbydy',
+                  logo_url: '/logo-store.png',
+                  theme_color: '#b84d6b',
+                  wa_group_url: 'https://chat.whatsapp.com/LOuCM1OUNNBEbuq894AJ0Q?s=cl&p=a&ilr=4',
+                  wa_admin_number: '6285124356993',
+                  testimonial_url: '#testimonials',
+                  website_status: 'ON',
+                  order_status: 'ON',
+                  closed_title: 'LAGI ISTIRAHAT DULU',
+                  closed_desc: 'Pesanan sedang ditutup sementara. Silakan kembali lagi nanti.',
+                  closed_button_text: 'Chat Admin',
+                };
+                const updated = { ...base };
                 if (key === 'website_status') updated.website_status = val;
                 if (key === 'order_status') updated.order_status = val;
 
-                console.log('[CUSTOMER REALTIME UPDATED STATE]', {
+                console.log('[CUSTOMER REALTIME STATE UPDATED]', {
                   website_status: updated.website_status,
                   order_status: updated.order_status,
                 });
@@ -110,15 +123,21 @@ export function useRealtimeSettings() {
         )
         .subscribe((status) => {
           if (status === 'SUBSCRIBED') {
-            console.log('Successfully subscribed to Supabase Realtime site_settings');
+            console.log('Successfully subscribed to Supabase Realtime site_settings for Customer');
           }
         });
     }
+
+    // 4. Polling fallback (every 2 seconds) to ensure instant UI sync across local DB / fallback mode
+    const pollInterval = setInterval(() => {
+      fetchSettings();
+    }, 2000);
 
     return () => {
       if (channel) {
         supabase.removeChannel(channel);
       }
+      clearInterval(pollInterval);
     };
   }, [fetchSettings]);
 

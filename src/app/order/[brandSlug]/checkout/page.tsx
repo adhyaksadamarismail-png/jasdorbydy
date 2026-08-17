@@ -133,12 +133,22 @@ export default function CheckoutPage() {
     e.preventDefault();
     setErrorMessage('');
 
-    if (settings && String(settings.website_status).toUpperCase() === 'OFF') {
+    const currentWebStatus = settings ? String(settings.website_status).toUpperCase() : 'ON';
+    const currentOrdStatus = settings ? String(settings.order_status).toUpperCase() : 'ON';
+    const isCheckoutBlocked = currentWebStatus === 'OFF' || currentOrdStatus === 'OFF';
+
+    console.log('[CUSTOMER CHECKOUT SUBMIT VALIDATION]', {
+      websiteStatus: currentWebStatus,
+      orderStatus: currentOrdStatus,
+      isCheckoutBlocked,
+    });
+
+    if (currentWebStatus === 'OFF') {
       setErrorMessage('Website sedang ditutup. Pesanan tidak dapat diproses.');
       return;
     }
 
-    if (settings && String(settings.order_status).toUpperCase() === 'OFF') {
+    if (currentOrdStatus === 'OFF') {
       setErrorMessage('Layanan order sedang ditutup sementara.');
       return;
     }
