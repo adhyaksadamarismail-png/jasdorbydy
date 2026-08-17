@@ -9,6 +9,8 @@ import ClosedPage from '@/components/ClosedPage';
 import ProductDetailModal from '@/components/ProductDetailModal';
 
 import { useRealtimeSettings } from '@/hooks/useRealtimeSettings';
+import { useRealtimeBrands } from '@/hooks/useRealtimeBrands';
+import { useRealtimeProducts } from '@/hooks/useRealtimeProducts';
 
 export default function MenuPage() {
   const urlParams = useParams();
@@ -16,9 +18,11 @@ export default function MenuPage() {
   const router = useRouter();
 
   const { settings, loading: settingsLoading } = useRealtimeSettings();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [brand, setBrand] = useState<Brand | null>(null);
-  const [loadingData, setLoadingData] = useState(true);
+  const { brands, loading: brandsLoading } = useRealtimeBrands();
+  const { products, loading: productsLoading } = useRealtimeProducts(brandSlug);
+
+  const matchedBrand = brands.find((b) => b.slug === brandSlug) || null;
+  const brand = matchedBrand;
 
   // Tab State: 'reguler' | 'satuan'
   const [activeTabType, setActiveTabType] = useState<'reguler' | 'satuan'>('reguler');
@@ -52,39 +56,16 @@ export default function MenuPage() {
   });
 
   useEffect(() => {
-    async function loadData() {
+    // Restore Cart from sessionStorage
+    const savedCart = sessionStorage.getItem(`jasdor_cart_${brandSlug}`);
+    if (savedCart) {
       try {
-        const [resProducts, resBrands] = await Promise.all([
-          fetch(`/api/products?brandSlug=${brandSlug}`),
-          fetch('/api/brands'),
-        ]);
-
-        const dataProducts = await resProducts.json();
-        const dataBrands = await resBrands.json();
-
-        if (dataProducts.success) setProducts(dataProducts.products);
-        if (dataBrands.success) {
-          const matchedBrand = dataBrands.brands.find((b: Brand) => b.slug === brandSlug);
-          if (matchedBrand) setBrand(matchedBrand);
-        }
-
-        // Restore Cart from sessionStorage
-        const savedCart = sessionStorage.getItem(`jasdor_cart_${brandSlug}`);
-        if (savedCart) {
-          try {
-            setCart(JSON.parse(savedCart));
-          } catch (e) {}
-        }
-      } catch (err) {
-        console.error('Failed loading menu data:', err);
-      } finally {
-        setLoadingData(false);
-      }
+        setCart(JSON.parse(savedCart));
+      } catch (e) {}
     }
-    loadData();
   }, [brandSlug]);
 
-  const loading = settingsLoading || loadingData;
+  const loading = settingsLoading || brandsLoading || productsLoading;
 
   const saveCartToStorage = (updatedCart: CartItem[]) => {
     setCart(updatedCart);

@@ -9,6 +9,8 @@ import { Outlet, Brand, WebsiteSettings } from '@/types';
 import ClosedPage from '@/components/ClosedPage';
 
 import { useRealtimeSettings } from '@/hooks/useRealtimeSettings';
+import { useRealtimeBrands } from '@/hooks/useRealtimeBrands';
+import { useRealtimeOutlets } from '@/hooks/useRealtimeOutlets';
 
 export default function SelectOutletPage() {
   const urlParams = useParams();
@@ -16,9 +18,11 @@ export default function SelectOutletPage() {
   const router = useRouter();
 
   const { settings, loading: settingsLoading } = useRealtimeSettings();
-  const [outlets, setOutlets] = useState<Outlet[]>([]);
-  const [brand, setBrand] = useState<Brand | null>(null);
-  const [loadingData, setLoadingData] = useState(true);
+  const { brands, loading: brandsLoading } = useRealtimeBrands();
+  const { outlets, loading: outletsLoading } = useRealtimeOutlets(brandSlug);
+
+  const matchedBrand = brands.find((b) => b.slug === brandSlug) || null;
+  const brand = matchedBrand;
 
   // Search & Geolocation state
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,32 +32,7 @@ export default function SelectOutletPage() {
   // Confirmation state when outlet is chosen
   const [selectedOutlet, setSelectedOutlet] = useState<Outlet | null>(null);
 
-  useEffect(() => {
-    async function loadOutletData() {
-      try {
-        const [resOutlets, resBrands] = await Promise.all([
-          fetch(`/api/outlets?brandSlug=${brandSlug}`),
-          fetch('/api/brands'),
-        ]);
-
-        const dataOutlets = await resOutlets.json();
-        const dataBrands = await resBrands.json();
-
-        if (dataOutlets.success) setOutlets(dataOutlets.outlets);
-        if (dataBrands.success) {
-          const matchedBrand = dataBrands.brands.find((b: Brand) => b.slug === brandSlug);
-          if (matchedBrand) setBrand(matchedBrand);
-        }
-      } catch (err) {
-        console.error('Failed loading outlet data:', err);
-      } finally {
-        setLoadingData(false);
-      }
-    }
-    loadOutletData();
-  }, [brandSlug]);
-
-  const loading = settingsLoading || loadingData;
+  const loading = settingsLoading || brandsLoading || outletsLoading;
 
   if (loading) {
     return (

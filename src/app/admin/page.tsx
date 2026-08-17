@@ -82,11 +82,20 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     loadAllAdminData();
 
-    // Supabase Realtime listener for site_settings
+    // Supabase Realtime listeners for all tables
     let channel: any = null;
     if (isSupabaseConfigured) {
       channel = supabase
-        .channel('admin_site_settings')
+        .channel('admin_full_realtime')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'website_settings' },
+          (payload: any) => {
+            if (payload.new) {
+              setSettings((prev) => (prev ? { ...prev, ...payload.new } : payload.new));
+            }
+          }
+        )
         .on(
           'postgres_changes',
           { event: '*', schema: 'public', table: 'site_settings' },
@@ -95,6 +104,58 @@ export default function AdminDashboardPage() {
               const rawVal = String(payload.new.setting_value).toUpperCase();
               const newStatus: 'ON' | 'OFF' = rawVal === 'OFF' || rawVal === 'OFFLINE' ? 'OFF' : 'ON';
               setSettings((prev) => (prev ? { ...prev, website_status: newStatus } : prev));
+            }
+          }
+        )
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'brands' },
+          (payload: any) => {
+            if (payload.eventType === 'INSERT') {
+              setBrands((prev) => prev.some((b) => b.id === payload.new.id) ? prev : [...prev, payload.new]);
+            } else if (payload.eventType === 'UPDATE') {
+              setBrands((prev) => prev.map((b) => (b.id === payload.new.id ? payload.new : b)));
+            } else if (payload.eventType === 'DELETE') {
+              setBrands((prev) => prev.filter((b) => b.id !== payload.old.id));
+            }
+          }
+        )
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'outlets' },
+          (payload: any) => {
+            if (payload.eventType === 'INSERT') {
+              setOutlets((prev) => prev.some((o) => o.id === payload.new.id) ? prev : [...prev, payload.new]);
+            } else if (payload.eventType === 'UPDATE') {
+              setOutlets((prev) => prev.map((o) => (o.id === payload.new.id ? payload.new : o)));
+            } else if (payload.eventType === 'DELETE') {
+              setOutlets((prev) => prev.filter((o) => o.id !== payload.old.id));
+            }
+          }
+        )
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'products' },
+          (payload: any) => {
+            if (payload.eventType === 'INSERT') {
+              setProducts((prev) => prev.some((p) => p.id === payload.new.id) ? prev : [...prev, payload.new]);
+            } else if (payload.eventType === 'UPDATE') {
+              setProducts((prev) => prev.map((p) => (p.id === payload.new.id ? payload.new : p)));
+            } else if (payload.eventType === 'DELETE') {
+              setProducts((prev) => prev.filter((p) => p.id !== payload.old.id));
+            }
+          }
+        )
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'orders' },
+          (payload: any) => {
+            if (payload.eventType === 'INSERT') {
+              setOrders((prev) => prev.some((o) => o.id === payload.new.id) ? prev : [payload.new, ...prev]);
+            } else if (payload.eventType === 'UPDATE') {
+              setOrders((prev) => prev.map((o) => (o.id === payload.new.id ? payload.new : o)));
+            } else if (payload.eventType === 'DELETE') {
+              setOrders((prev) => prev.filter((o) => o.id !== payload.old.id));
             }
           }
         )

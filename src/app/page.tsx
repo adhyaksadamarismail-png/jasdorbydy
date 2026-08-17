@@ -11,29 +11,14 @@ import HeaderNav from '@/components/HeaderNav';
 import Footer from '@/components/Footer';
 
 import { useRealtimeSettings } from '@/hooks/useRealtimeSettings';
+import { useRealtimeBrands } from '@/hooks/useRealtimeBrands';
 
 export default function Homepage() {
   const { settings, loading: settingsLoading } = useRealtimeSettings();
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const [loadingBrands, setLoadingBrands] = useState(true);
+  const { brands, loading: brandsLoading } = useRealtimeBrands();
   const [isTestiOpen, setIsTestiOpen] = useState(false);
 
-  useEffect(() => {
-    async function fetchBrands() {
-      try {
-        const resBrands = await fetch('/api/brands');
-        const dataBrands = await resBrands.json();
-        if (dataBrands.success) setBrands(dataBrands.brands);
-      } catch (err) {
-        console.error('Failed to load brands', err);
-      } finally {
-        setLoadingBrands(false);
-      }
-    }
-    fetchBrands();
-  }, []);
-
-  const loading = settingsLoading || loadingBrands;
+  const loading = settingsLoading || brandsLoading;
 
   if (loading) {
     return (

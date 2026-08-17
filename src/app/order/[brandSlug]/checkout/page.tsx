@@ -8,6 +8,7 @@ import { CartItem, Brand, WebsiteSettings } from '@/types';
 import ClosedPage from '@/components/ClosedPage';
 
 import { useRealtimeSettings } from '@/hooks/useRealtimeSettings';
+import { useRealtimeBrands } from '@/hooks/useRealtimeBrands';
 
 export default function CheckoutPage() {
   const urlParams = useParams();
@@ -15,9 +16,11 @@ export default function CheckoutPage() {
   const router = useRouter();
 
   const { settings, loading: settingsLoading } = useRealtimeSettings();
+  const { brands, loading: brandsLoading } = useRealtimeBrands();
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [brand, setBrand] = useState<Brand | null>(null);
-  const [loadingData, setLoadingData] = useState(true);
+
+  const matchedBrand = brands.find((b) => b.slug === brandSlug) || null;
+  const brand = matchedBrand;
 
   // Form Fields
   const [customerName, setCustomerName] = useState('');
@@ -29,33 +32,16 @@ export default function CheckoutPage() {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    async function loadCheckoutData() {
+    // Restore Cart from sessionStorage
+    const savedCart = sessionStorage.getItem(`jasdor_cart_${brandSlug}`);
+    if (savedCart) {
       try {
-        const resBrands = await fetch('/api/brands');
-        const dataBrands = await resBrands.json();
-
-        if (dataBrands.success) {
-          const matchedBrand = dataBrands.brands.find((b: Brand) => b.slug === brandSlug);
-          if (matchedBrand) setBrand(matchedBrand);
-        }
-
-        // Restore Cart from sessionStorage
-        const savedCart = sessionStorage.getItem(`jasdor_cart_${brandSlug}`);
-        if (savedCart) {
-          try {
-            setCart(JSON.parse(savedCart));
-          } catch (e) {}
-        }
-      } catch (err) {
-        console.error('Failed loading checkout:', err);
-      } finally {
-        setLoadingData(false);
-      }
+        setCart(JSON.parse(savedCart));
+      } catch (e) {}
     }
-    loadCheckoutData();
   }, [brandSlug]);
 
-  const loading = settingsLoading || loadingData;
+  const loading = settingsLoading || brandsLoading;
 
   const saveCartToStorage = (updatedCart: CartItem[]) => {
     setCart(updatedCart);

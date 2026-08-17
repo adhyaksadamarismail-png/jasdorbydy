@@ -9,24 +9,31 @@ export async function GET() {
   try {
     let settings = db.prepare('SELECT * FROM website_settings WHERE id = 1').get() as WebsiteSettings;
 
-    // Overlay Supabase website_status if Supabase is active
     if (isSupabaseConfigured) {
       try {
-        const { data: supaData } = await supabase
-          .from('site_settings')
+        const { data: supaSet } = await supabase
+          .from('website_settings')
           .select('*')
-          .eq('setting_key', 'website_status')
+          .eq('id', 1)
           .single();
 
-        if (supaData && supaData.setting_value) {
-          const rawVal = String(supaData.setting_value).toUpperCase();
-          const supaStatus: 'ON' | 'OFF' = rawVal === 'OFF' || rawVal === 'OFFLINE' ? 'OFF' : 'ON';
-          if (settings) {
-            settings = { ...settings, website_status: supaStatus };
+        if (supaSet) {
+          settings = { ...settings, ...supaSet };
+        } else {
+          // Check site_settings compatibility table for website_status
+          const { data: statusData } = await supabase
+            .from('site_settings')
+            .select('*')
+            .eq('setting_key', 'website_status')
+            .single();
+
+          if (statusData && statusData.setting_value) {
+            const rawVal = String(statusData.setting_value).toUpperCase();
+            settings.website_status = rawVal === 'OFF' || rawVal === 'OFFLINE' ? 'OFF' : 'ON';
           }
         }
       } catch (err) {
-        console.warn('Supabase fetch inside /api/settings GET failed:', err);
+        console.warn('Supabase fetch in /api/settings GET failed:', err);
       }
     }
 
@@ -53,6 +60,7 @@ export async function POST(req: Request) {
       closed_button_text,
     } = body;
 
+    // 1. Sync SQLite
     db.prepare(`
       UPDATE website_settings
       SET 
@@ -82,25 +90,32 @@ export async function POST(req: Request) {
       closed_button_text
     );
 
-    // Sync website_status to Supabase site_settings table
-    if (website_status && isSupabaseConfigured) {
+    const updated = db.prepare('SELECT * FROM website_settings WHERE id = 1').get() as WebsiteSettings;
+
+    // 2. Sync Supabase Single Source of Truth
+    if (isSupabaseConfigured) {
       try {
         await supabase
-          .from('site_settings')
+          .from('website_settings')
           .upsert(
-            { id: '1', setting_key: 'website_status', setting_value: String(website_status).toUpperCase(), updated_at: new Date().toISOString() },
-            { onConflict: 'setting_key' }
+            {
+              ...updated,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: 'id' }
           );
-      } catch (supaErr) {
-        console.error('Failed syncing website_status to Supabase in POST /api/settings:', supaErr);
-      }
-    }
 
-    const updated = db.prepare('SELECT * FROM website_settings WHERE id = 1').get() as WebsiteSettings;
-    
-    // Ensure response reflects latest website_status
-    if (website_status) {
-      updated.website_status = String(website_status).toUpperCase() as 'ON' | 'OFF';
+        if (website_status) {
+          await supabase
+            .from('site_settings')
+            .upsert(
+              { id: '1', setting_key: 'website_status', setting_value: String(website_status).toUpperCase(), updated_at: new Date().toISOString() },
+              { onConflict: 'setting_key' }
+            );
+        }
+      } catch (supaErr) {
+        console.error('Failed syncing website_settings to Supabase:', supaErr);
+      }
     }
 
     return NextResponse.json({ success: true, settings: updated });
