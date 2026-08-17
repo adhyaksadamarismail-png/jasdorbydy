@@ -186,6 +186,12 @@ export default function AdminDashboardPage() {
     setIsTogglingWebsite(true);
     setSaveErrorMsg('');
 
+    console.log('[ADMIN TOGGLE WEBSITE STATUS CLICKED]', {
+      setting_key: 'website_status',
+      old_value: currentStatus,
+      new_value: nextStatus,
+    });
+
     try {
       // Step A: Update local API (which also syncs to Supabase on server)
       const res = await fetch('/api/settings', {
@@ -205,19 +211,20 @@ export default function AdminDashboardPage() {
       // Step B: Direct Supabase client sync if configured
       if (isSupabaseConfigured) {
         try {
-          await supabase
-            .from('website_settings')
-            .upsert(
-              { ...data.settings, website_status: nextStatus, updated_at: new Date().toISOString() },
-              { onConflict: 'id' }
-            );
-
-          await supabase
+          const { data: supaData, error: supaErr } = await supabase
             .from('site_settings')
             .upsert(
               { id: '1', setting_key: 'website_status', setting_value: nextStatus, updated_at: new Date().toISOString() },
               { onConflict: 'setting_key' }
-            );
+            )
+            .select()
+            .single();
+
+          console.log('[ADMIN DIRECT SUPABASE UPDATE RESULT]', {
+            setting_key: 'website_status',
+            SupabaseUpdateResult: supaData,
+            SupabaseError: supaErr,
+          });
         } catch (supaErr) {
           console.warn('Direct Supabase client toggle update warning:', supaErr);
         }
@@ -237,6 +244,12 @@ export default function AdminDashboardPage() {
     const nextStatus: 'ON' | 'OFF' = currentStatus === 'OFF' ? 'ON' : 'OFF';
     setSaveErrorMsg('');
 
+    console.log('[ADMIN TOGGLE ORDER STATUS CLICKED]', {
+      setting_key: 'order_status',
+      old_value: currentStatus,
+      new_value: nextStatus,
+    });
+
     try {
       const res = await fetch('/api/settings', {
         method: 'POST',
@@ -255,19 +268,20 @@ export default function AdminDashboardPage() {
       // Direct Supabase client sync if configured
       if (isSupabaseConfigured) {
         try {
-          await supabase
-            .from('website_settings')
-            .upsert(
-              { ...data.settings, order_status: nextStatus, updated_at: new Date().toISOString() },
-              { onConflict: 'id' }
-            );
-
-          await supabase
+          const { data: supaData, error: supaErr } = await supabase
             .from('site_settings')
             .upsert(
               { id: '2', setting_key: 'order_status', setting_value: nextStatus, updated_at: new Date().toISOString() },
               { onConflict: 'setting_key' }
-            );
+            )
+            .select()
+            .single();
+
+          console.log('[ADMIN DIRECT SUPABASE UPDATE RESULT]', {
+            setting_key: 'order_status',
+            SupabaseUpdateResult: supaData,
+            SupabaseError: supaErr,
+          });
         } catch (supaErr) {
           console.warn('Direct Supabase client toggle update warning:', supaErr);
         }

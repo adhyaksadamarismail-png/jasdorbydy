@@ -26,27 +26,33 @@ export async function GET() {
       };
     }
 
+    // Try reading site_settings key-value pairs from SQLite
+    try {
+      const rows = db.prepare('SELECT * FROM site_settings').all() as any[];
+      if (rows && rows.length > 0) {
+        const webRow = rows.find((r) => r.setting_key === 'website_status');
+        const ordRow = rows.find((r) => r.setting_key === 'order_status');
+        if (webRow) settings.website_status = webRow.setting_value;
+        if (ordRow) settings.order_status = ordRow.setting_value;
+      }
+    } catch (e) {}
+
+    // Try reading site_settings key-value pairs from Supabase if configured
     if (isSupabaseConfigured) {
       try {
-        const { data: supaSet } = await supabase
-          .from('website_settings')
-          .select('*')
-          .eq('id', 1)
-          .single();
+        const { data: supaRows, error: supaErr } = await supabase
+          .from('site_settings')
+          .select('*');
 
-        if (supaSet) {
-          settings = { ...settings, ...supaSet };
-        } else {
-          // Check site_settings compatibility table for website_status
-          const { data: statusData } = await supabase
-            .from('site_settings')
-            .select('*')
-            .eq('setting_key', 'website_status')
-            .single();
+        if (!supaErr && supaRows && supaRows.length > 0) {
+          const webRow = supaRows.find((r: any) => r.setting_key === 'website_status');
+          const ordRow = supaRows.find((r: any) => r.setting_key === 'order_status');
 
-          if (statusData && statusData.setting_value) {
-            const rawVal = String(statusData.setting_value).toUpperCase();
-            settings.website_status = rawVal === 'OFF' || rawVal === 'OFFLINE' ? 'OFF' : 'ON';
+          if (webRow && webRow.setting_value) {
+            settings.website_status = String(webRow.setting_value).toUpperCase() === 'OFF' ? 'OFF' : 'ON';
+          }
+          if (ordRow && ordRow.setting_value) {
+            settings.order_status = String(ordRow.setting_value).toUpperCase() === 'OFF' ? 'OFF' : 'ON';
           }
         }
       } catch (err) {
@@ -54,9 +60,9 @@ export async function GET() {
       }
     }
 
-    // Normalize statuses to uppercase ON or OFF
-    settings.website_status = String(settings.website_status).toUpperCase() === 'OFF' ? 'OFF' : 'ON';
-    settings.order_status = String(settings.order_status).toUpperCase() === 'OFF' ? 'OFF' : 'ON';
+    // Normalize status values
+    settings.website_status = String(settings.website_status || 'ON').toUpperCase() === 'OFF' ? 'OFF' : 'ON';
+    settings.order_status = String(settings.order_status || 'ON').toUpperCase() === 'OFF' ? 'OFF' : 'ON';
 
     return NextResponse.json({ success: true, settings });
   } catch (error: any) {
@@ -68,7 +74,6 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // Fetch existing settings first
     let current = db.prepare('SELECT * FROM website_settings WHERE id = 1').get() as WebsiteSettings;
     if (!current) {
       current = {
@@ -87,6 +92,14 @@ export async function POST(req: Request) {
       };
     }
 
+    const website_status = body.website_status !== undefined
+      ? (String(body.website_status).toUpperCase() === 'OFF' ? 'OFF' : 'ON')
+      : current.website_status;
+
+    const order_status = body.order_status !== undefined
+      ? (String(body.order_status).toUpperCase() === 'OFF' ? 'OFF' : 'ON')
+      : current.order_status;
+
     const site_name = body.site_name !== undefined ? body.site_name : current.site_name;
     const logo_url = body.logo_url !== undefined ? body.logo_url : current.logo_url;
     const theme_color = body.theme_color !== undefined ? body.theme_color : current.theme_color;
@@ -97,32 +110,39 @@ export async function POST(req: Request) {
     const closed_desc = body.closed_desc !== undefined ? body.closed_desc : current.closed_desc;
     const closed_button_text = body.closed_button_text !== undefined ? body.closed_button_text : current.closed_button_text;
 
-    // Explicit Status Normalization
-    const website_status = body.website_status !== undefined
-      ? (String(body.website_status).toUpperCase() === 'OFF' ? 'OFF' : 'ON')
-      : current.website_status;
+    // 1. Update SQLite site_settings table (key-value)
+    try {
+      db.prepare(`
+        INSERT INTO site_settings (id, setting_key, setting_value, updated_at)
+        VALUES ('1', 'website_status', ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(setting_key) DO UPDATE SET setting_value = excluded.setting_value, updated_at = CURRENT_TIMESTAMP
+      `).run(website_status);
 
-    const order_status = body.order_status !== undefined
-      ? (String(body.order_status).toUpperCase() === 'OFF' ? 'OFF' : 'ON')
-      : current.order_status;
+      db.prepare(`
+        INSERT INTO site_settings (id, setting_key, setting_value, updated_at)
+        VALUES ('2', 'order_status', ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(setting_key) DO UPDATE SET setting_value = excluded.setting_value, updated_at = CURRENT_TIMESTAMP
+      `).run(order_status);
+    } catch (e) {
+      console.warn('SQLite site_settings update warning:', e);
+    }
 
-    // 1. Update SQLite DB
+    // 2. Update SQLite website_settings table
     db.prepare(`
       UPDATE website_settings
       SET 
-        site_name = ?,
-        logo_url = ?,
-        theme_color = ?,
-        wa_group_url = ?,
-        wa_admin_number = ?,
-        testimonial_url = ?,
-        website_status = ?,
-        order_status = ?,
-        closed_title = ?,
-        closed_desc = ?,
-        closed_button_text = ?
+        site_name = ?, logo_url = ?, theme_color = ?, wa_group_url = ?,
+        wa_admin_number = ?, testimonial_url = ?, website_status = ?,
+        order_status = ?, closed_title = ?, closed_desc = ?, closed_button_text = ?
       WHERE id = 1
     `).run(
+      site_name, logo_url, theme_color, wa_group_url,
+      wa_admin_number, testimonial_url, website_status,
+      order_status, closed_title, closed_desc, closed_button_text
+    );
+
+    const updatedSettings: WebsiteSettings = {
+      ...current,
       site_name,
       logo_url,
       theme_color,
@@ -133,43 +153,39 @@ export async function POST(req: Request) {
       order_status,
       closed_title,
       closed_desc,
-      closed_button_text
-    );
+      closed_button_text,
+    };
 
-    const updated = db.prepare('SELECT * FROM website_settings WHERE id = 1').get() as WebsiteSettings;
-
-    // 2. Sync Supabase Single Source of Truth if configured
+    // 3. Sync to Supabase site_settings table by setting_key
     if (isSupabaseConfigured) {
       try {
-        await supabase
-          .from('website_settings')
-          .upsert(
-            {
-              ...updated,
-              updated_at: new Date().toISOString(),
-            },
-            { onConflict: 'id' }
-          );
-
-        await supabase
+        const { data: webData, error: webErr } = await supabase
           .from('site_settings')
           .upsert(
             { id: '1', setting_key: 'website_status', setting_value: website_status, updated_at: new Date().toISOString() },
             { onConflict: 'setting_key' }
-          );
+          )
+          .select()
+          .single();
 
-        await supabase
+        console.log('[ADMIN SUPABASE UPDATE website_status]', { setting_key: 'website_status', value: website_status, result: webData, error: webErr });
+
+        const { data: ordData, error: ordErr } = await supabase
           .from('site_settings')
           .upsert(
             { id: '2', setting_key: 'order_status', setting_value: order_status, updated_at: new Date().toISOString() },
             { onConflict: 'setting_key' }
-          );
+          )
+          .select()
+          .single();
+
+        console.log('[ADMIN SUPABASE UPDATE order_status]', { setting_key: 'order_status', value: order_status, result: ordData, error: ordErr });
       } catch (supaErr) {
-        console.error('Failed syncing website_settings to Supabase:', supaErr);
+        console.error('[ADMIN SUPABASE UPDATE ERROR]', supaErr);
       }
     }
 
-    return NextResponse.json({ success: true, settings: updated });
+    return NextResponse.json({ success: true, settings: updatedSettings });
   } catch (error: any) {
     console.error('Error in /api/settings POST:', error);
     return NextResponse.json({ success: false, error: error.message || 'Gagal menyimpan pengaturan' }, { status: 500 });

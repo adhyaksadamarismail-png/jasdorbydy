@@ -112,7 +112,21 @@ export function initDb() {
   if (!db.exec) return;
 
   try {
-    // Website Settings Table
+    // Site Settings Key-Value Table
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS site_settings (
+        id TEXT PRIMARY KEY,
+        setting_key TEXT UNIQUE NOT NULL,
+        setting_value TEXT NOT NULL,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      INSERT INTO site_settings (id, setting_key, setting_value)
+      VALUES ('1', 'website_status', 'ON'), ('2', 'order_status', 'ON')
+      ON CONFLICT(setting_key) DO NOTHING;
+    `);
+
+    // Website Settings Full Config Table
     db.exec(`
       CREATE TABLE IF NOT EXISTS website_settings (
         id INTEGER PRIMARY KEY DEFAULT 1,
