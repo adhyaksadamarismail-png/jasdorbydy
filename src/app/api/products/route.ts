@@ -67,7 +67,6 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { id, brand_id, name, image, description, price, category, availability, is_single_item, customization_json } = body;
     const isSingleVal = is_single_item ? 1 : 0;
-    const targetId = id || `prod_${Date.now()}`;
     const prodImage = image || '/coffee-latte.svg';
     const prodCategory = category || 'Kopi';
     const prodAvail = availability || 'ON';
